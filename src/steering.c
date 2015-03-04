@@ -1,7 +1,6 @@
 #include <avr/io.h>
 
 #include "iomap.h"
-#include "fixed/fix8.h"
 
 /* Steering servo: about
  * Full right = 2300

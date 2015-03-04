@@ -6,6 +6,7 @@
 
 #include "iomap.h"
 #include "steering.h"
+#include "motor.h"
 
 #include "fixed/fix8.h"
 
@@ -24,19 +25,24 @@ int main(void)
 
 	// Buttons to input
 	BTN_DDR = 0x00;
-	
+
 	init_steering();
 	steering_set_direction(-600);
 	steering_set_enabled(1);
-	
+
+	init_motor();
+	motor_set_duty_cycle(70);
+	motor_set_enabled(1);
+
 	uint8_t state = 0;
-	
+
 	/* Revert to neutral steering position on button press */
 	for (;;) {
 		uint8_t pressed = !(BTN_PIN & BTN0);
-		
+
 		if (pressed) {
-			OCR1A = 3000;
+			steering_set_direction(0);
+			motor_set_enabled(0);
 			LED_PORT = LED0;
 		}
 	}

@@ -1,4 +1,5 @@
 *.o
 *.dep
+*~
 main.hex
 main.elf
