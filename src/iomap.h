@@ -24,7 +24,7 @@
 #define STEER_TCRC		TCCR1C
 #define STEER_ICR		ICR1
 #define STEER_OCRA		OCR1A
-#define STEER0			BIT(5)
+#define STEER0			BIT(PB5)
 
 #define MOTORPWM_PORT		PORTH
 #define MOTORPWM_DDR		DDRH
