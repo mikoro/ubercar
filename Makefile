@@ -3,7 +3,7 @@
 ################################################################################
 
 TARGET := main
-SRC := src/main.c src/steering.c src/motor.c src/fixed/fix8.c
+SRC := src/main.c src/steering.c src/motor.c src/lcd.c src/fixed/fix8.c
 
 RM := rm -rf
 OBJS := $(SRC:%.c=%.o)

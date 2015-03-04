@@ -7,6 +7,7 @@
 #include "iomap.h"
 #include "steering.h"
 #include "motor.h"
+#include "lcd.h"
 
 #include "fixed/fix8.h"
 
@@ -26,13 +27,17 @@ int main(void)
 	// Buttons to input
 	BTN_DDR = 0x00;
 
+	init_lcd();
+
+	//lcd_printf(3, "42 hey");
+
 	init_steering();
 	steering_set_direction(-600);
 	steering_set_enabled(1);
 
 	init_motor();
 	motor_set_duty_cycle(70);
-	motor_set_enabled(1);
+	motor_set_enabled(0);
 
 	uint8_t state = 0;
 

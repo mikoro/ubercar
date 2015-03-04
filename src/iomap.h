@@ -43,4 +43,13 @@
 #define MOTORCTL_ENA		BIT(PK2)
 #define MOTORCTL_ENB		BIT(PK3)
 
+#define LCD_PORT		PORTD
+#define LCD_DDR			DDRD
+#define LCD_UBRRL		UBRR1L
+#define LCD_UBRRH		UBRR1H
+#define LCD_UCSRA		UCSR1A
+#define LCD_UCSRB		UCSR1B
+#define LCD_UCSRC		UCSR1C
+#define LCD_UDR			UDR1
+
 #endif

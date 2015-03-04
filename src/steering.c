@@ -1,6 +1,7 @@
 #include <avr/io.h>
 
 #include "iomap.h"
+#include "lcd.h"
 
 /* Steering servo: about
  * Full right = 2300
@@ -9,6 +10,12 @@
  *
  * Values outside range will cause bad noises
  */
+
+static void update_screen(void) {
+	lcd_printf(1, "STEER %s %d",
+		   (STEER_TCRA & BIT(COM1A1)) ? "ON " : "OFF",
+		   STEER_OCRA);
+}
 
 void init_steering(void) {
 	// Enable output pin
@@ -21,17 +28,24 @@ void init_steering(void) {
 
 	// Set MAX attained in 5ms with clock divider 8
 	STEER_ICR = 10000;
+
+	update_screen();
 }
 
 void steering_set_enabled(uint8_t en) {
-	if (en)
+	if (en) {
 		STEER_TCRA |= BIT(COM1A1);
-	else
+	} else {
 		STEER_TCRA &= ~BIT(COM1A1);
+	}
+
+	update_screen();
 }
 
 void steering_set_duty_cycle(uint16_t dc) {
 	STEER_OCRA = dc;
+
+	update_screen();
 }
 
 // Input in range -600 .. 600, 127 is neutral, -600 is left
