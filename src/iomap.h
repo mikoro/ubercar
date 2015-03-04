@@ -52,4 +52,17 @@
 #define LCD_UCSRC		UCSR1C
 #define LCD_UDR			UDR1
 
+#define TACHO_DDR		DDRL
+#define TACHO_TCRA		TCCR5A
+#define TACHO_TCRB		TCCR5B
+#define TACHO_TCRC		TCCR5C
+#define TACHO_TCNT		TCNT5
+#define TACHO0			BIT(PL2)
+
+#define REFCLK_TCRA		TCCR3A
+#define REFCLK_TCRB		TCCR3B
+#define REFCLK_TCRC		TCCR3C
+#define REFCLK_TCNT		TCNT3
+#define REFCLK_OCR		OCR3A
+
 #endif

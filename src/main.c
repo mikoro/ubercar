@@ -8,6 +8,7 @@
 #include "steering.h"
 #include "motor.h"
 #include "lcd.h"
+#include "tacho.h"
 
 #include "fixed/fix8.h"
 
@@ -36,13 +37,17 @@ int main(void)
 	steering_set_enabled(1);
 
 	init_motor();
-	motor_set_duty_cycle(70);
-	motor_set_enabled(0);
+	motor_set_duty_cycle(100);
+	motor_set_enabled(1);
+
+	init_tacho();
 
 	uint8_t state = 0;
 
 	/* Revert to neutral steering position on button press */
 	for (;;) {
+		tacho_update();
+
 		uint8_t pressed = !(BTN_PIN & BTN0);
 
 		if (pressed) {
