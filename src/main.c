@@ -30,8 +30,6 @@ int main(void)
 
 	init_lcd();
 
-	//lcd_printf(3, "42 hey");
-
 	init_steering();
 	steering_set_direction(-600);
 	steering_set_enabled(1);
@@ -44,7 +42,7 @@ int main(void)
 
 	uint8_t state = 0;
 
-	/* Revert to neutral steering position on button press */
+	/* Revert to neutral steering position, motor off on button press */
 	for (;;) {
 		tacho_update();
 

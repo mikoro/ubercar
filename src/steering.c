@@ -5,7 +5,7 @@
 
 /* Steering servo: about
  * Full right = 2300
- * Neutral    = 3000 (verified)
+ * Neutral    = 3000
  * Full left  = 3600
  *
  * Values outside range will cause bad noises

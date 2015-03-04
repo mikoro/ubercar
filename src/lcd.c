@@ -69,6 +69,7 @@ void print_ch(uint8_t col, uint8_t row, uint8_t b) {
 void init_lcd() {
 	// 8 bits, no parity, 1 stop bit, 9600 baud
 
+	// wait for LCD controller to be ready
 	_delay_ms(500);
 
 	LCD_PORT = 0x00;
@@ -93,8 +94,6 @@ void init_lcd() {
 		LED_PORT = LED0|LED1;
 		for (;;);
 	}
-
-	//print_str(0, "LCD   OK");
 
 	lcd_printf(0, "LCD   OK");
 }
