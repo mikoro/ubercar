@@ -3,16 +3,17 @@
 #include "iomap.h"
 #include "lcd.h"
 
-/* Steering servo: about
- * Full right = 2300
- * Neutral    = 3000
- * Full left  = 3600
+/* Steering servo:
+ *
+ * Full right = 45000
+ * Neutral    = 40000
+ * Full left  = 35000
  *
  * Values outside range will cause bad noises
  */
-
+ 
 static void update_screen(void) {
-	lcd_printf(1, "STEER %s %d",
+	lcd_printf(1, "STEER %s %u",
 		   (STEER_TCRA & BIT(COM1A1)) ? "ON " : "OFF",
 		   STEER_OCRA);
 }
@@ -22,21 +23,23 @@ void init_steering(void) {
 	STEER_PORT &= ~STEER0;
 	STEER_DDR |= STEER0;
 
-	// 10-bit fast PWM, divide clock by 8
+	// Fast PWM, divide clock by 1
 	STEER_TCRA = BIT(WGM11);
-	STEER_TCRB = BIT(WGM12) | BIT(WGM13) | BIT(CS11);
+	STEER_TCRB = BIT(WGM12) | BIT(WGM13) | BIT(CS10);
 
-	// Set MAX attained in 5ms with clock divider 8
-	STEER_ICR = 10000;
-
+	// PWM period 4ms (250 Hz), set TOP accordingly
+	STEER_ICR = 64000;
+	STEER_OCRA = 40000;
+	
 	update_screen();
 }
 
 void steering_set_enabled(uint8_t en) {
-	if (en) {
-		STEER_TCRA |= BIT(COM1A1);
-	} else {
-		STEER_TCRA &= ~BIT(COM1A1);
+
+	if (en) { // PWM on (inverted, i.e normally low)
+		STEER_TCRA |= BIT(COM1A1) | BIT(COM1A0);
+	} else { // PWM disabled
+		STEER_TCRA &= ~(BIT(COM1A1) | BIT(COM1A0));
 	}
 
 	update_screen();
@@ -47,9 +50,15 @@ void steering_set_duty_cycle(uint16_t dc) {
 
 	update_screen();
 }
-
-// Input in range -600 .. 600, 127 is neutral, -600 is left
-// Output in range 2400..3600
+ 
+// Input in range -5000 .. 5000, 0 is neutral, -5000 is left
 void steering_set_direction(int16_t dir) {
-	steering_set_duty_cycle(3000 - dir);
+	steering_set_duty_cycle(40000 + dir);
+}
+
+// Input in range 0 .. 255, 127 is neutral, 0 is left
+void steering_set_direction2(uint8_t dir) {
+	// Mapping is not perfect, factor should be 39.216 (could this be done with f16.16?)
+	uint16_t dc = 39 * dir + 35000;
+	steering_set_duty_cycle(dc);
 }

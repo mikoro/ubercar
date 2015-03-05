@@ -31,16 +31,17 @@ int main(void)
 	init_lcd();
 
 	init_steering();
-	steering_set_direction(-600);
+	steering_set_direction2(0);
 	steering_set_enabled(1);
 
 	init_motor();
 	motor_set_duty_cycle(100);
-	motor_set_enabled(1);
+	motor_set_enabled(0);
 
 	init_tacho();
 
 	uint8_t state = 0;
+	uint8_t dir = 0;
 
 	/* Revert to neutral steering position, motor off on button press */
 	for (;;) {
@@ -49,9 +50,8 @@ int main(void)
 		uint8_t pressed = !(BTN_PIN & BTN0);
 
 		if (pressed) {
-			steering_set_direction(0);
-			motor_set_enabled(0);
-			LED_PORT = LED0;
+			steering_set_direction2(dir);
+			dir++;
 		}
 	}
 }
