@@ -42,13 +42,12 @@ int main(void)
 
 	init_tacho();
 
-	uint8_t state = 0;
-	uint8_t dir = 0;
 	uint8_t dc = 0;
-
 	uint8_t was_pressed = 0;
 
 	sei();
+	
+	demo_loop();
 
 	/* Revert to neutral steering position, motor off on button press */
 	for (;;) {
@@ -60,8 +59,6 @@ int main(void)
 		uint8_t pressed = !(BTN_PIN & BTN0);
 
 		if (pressed && !was_pressed) {
-//			steering_set_direction2(dir);
-//			dir += 10;
 
 			motor_set_duty_cycle2(dc);
 			dc += 30;
@@ -72,5 +69,45 @@ int main(void)
 			was_pressed = 0;
 
 		_delay_us(1500);
+	}
+}
+
+void demo_loop()
+{
+	uint8_t dir = 127;
+	int8_t dirInc = 1;
+	
+	uint8_t power = 0;
+	int8_t powerInc = 1;
+	
+	uint8_t divider = 0;
+	
+	for (;;) {
+		tacho_update();
+		irsens_update();
+		
+		if (dir == 255)
+			dirInc = -1;
+			
+		if (dir == 0)
+			dirInc = 1;
+			
+		if (power == 255)
+			powerInc = -1;
+			
+		if (power == 0)
+			powerInc = 1;
+		
+		dir += dirInc;
+		
+		if (++divider % 3 == 0)
+		{
+			power += powerInc;
+		}
+		
+		steering_set_direction2(dir);
+		motor_set_duty_cycle2(power);
+		
+		_delay_ms(2);
 	}
 }
