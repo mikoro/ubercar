@@ -7,8 +7,8 @@
 
 static fix8_t avg2 = F8(127);
 
-static const fix8_t alpha2 = F8(0.25);
-static const fix8_t oneminusalpha2 = F8(0.75);
+static const fix8_t alpha2 = F8(0.02);
+static const fix8_t oneminusalpha2 = F8(0.98);
 
 void init_irsens() {
 	IRSENS_DDR = 0;
@@ -61,3 +61,8 @@ void irsens_update() {
 	//lcd_printf(11, "M l %u h %u   ", mappedl, mappedh);
 	lcd_printf(9,  "IRSNS %u    ", val);
 }
+
+uint8_t irsens_get_direction() {
+	return 255 - fix8_to_int(avg2);
+}
+

@@ -6,6 +6,7 @@
 #include "iomap.h"
 
 static void send_byte(uint8_t b) {
+	return;
 	for (;;) {
 		uint8_t v = LCD_UCSRA;
 		if (v & BIT(UDRE1)) break;
@@ -15,6 +16,7 @@ static void send_byte(uint8_t b) {
 }
 
 static uint8_t read_byte() {
+	return 0x06;
 	for (;;) {
 		uint8_t v = LCD_UCSRA;
 		if (v & BIT(RXC1)) break;
