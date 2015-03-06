@@ -7,8 +7,8 @@
 
 static fix8_t avg2 = F8(127);
 
-static const fix8_t alpha2 = F8(0.02);
-static const fix8_t oneminusalpha2 = F8(0.98);
+static const fix8_t alpha2 = F8(0.1);
+static const fix8_t oneminusalpha2 = F8(0.9);
 
 void init_irsens() {
 	IRSENS_DDR = 0;

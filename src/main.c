@@ -42,33 +42,40 @@ int main(void)
 
 	init_tacho();
 
-	uint8_t dc = 0;
-	uint8_t was_pressed = 0;
-
 	sei();
 	
-	demo_loop();
+	//demo_loop();
+	
+	int16_t targetPower = 0;
 
-	/* Revert to neutral steering position, motor off on button press */
 	for (;;) {
 		tacho_update();
 		irsens_update();
 
 		steering_set_direction2(irsens_get_direction());
+		
+		uint8_t currentSpeed = tacho_get_speed();
+		int16_t speedDelta = 20 - currentSpeed;
+		targetPower += speedDelta / 10;
+		
+		if (targetPower < 0)
+			targetPower = 0;
+			
+		if (targetPower > 255)
+			targetPower = 255;
+			
+		motor_set_duty_cycle2(targetPower);
 
+		/*
 		uint8_t pressed = !(BTN_PIN & BTN0);
-
 		if (pressed && !was_pressed) {
-
-			motor_set_duty_cycle2(dc);
-			dc += 30;
-
 			was_pressed = 1;
 		}
 		if (!pressed)
 			was_pressed = 0;
-
-		_delay_us(1500);
+		*/
+		
+		_delay_ms(10);
 	}
 }
 

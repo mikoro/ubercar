@@ -53,3 +53,8 @@ void init_tacho(void) {
 void tacho_update() {
 	update_screen();
 }
+
+uint8_t tacho_get_speed() {
+	return fix8_to_int(avg);
+}
+
