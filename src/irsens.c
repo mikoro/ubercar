@@ -45,6 +45,7 @@ void irsens_update() {
 	}
 
 	if (low == 255 || high == 255) {
+		uint8_t val = fix8_to_int(avg2);
 		return;
 	}
 
@@ -56,7 +57,7 @@ void irsens_update() {
 	avg2 = fix8_add(fix8_mul(alpha2, xf), fix8_mul(oneminusalpha2, avg2));
 	uint8_t val = fix8_to_int(avg2);
 
-	lcd_printf(10, "B l %u h %u           ", low, high);
-	lcd_printf(11, "M l %u h %u   ", mappedl, mappedh);
+	//lcd_printf(10, "B l %u h %u           ", low, high);
+	//lcd_printf(11, "M l %u h %u   ", mappedl, mappedh);
 	lcd_printf(9,  "IRSNS %u    ", val);
 }

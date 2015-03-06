@@ -24,7 +24,7 @@ extern "C"
 #include "libfixmath_conf.h"
 #include <stdint.h>
 
-typedef int16_t fix8_t;
+typedef uint16_t fix8_t;
 #if 0
 static const fix8_t FOUR_DIV_PI  = 0x145F3;            /*!< Fix8 value of 4/PI */
 static const fix8_t _FOUR_DIV_PI2 = 0xFFFF9840;        /*!< Fix8 value of -4/PI² */
