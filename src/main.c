@@ -28,6 +28,8 @@ int main(void)
 	// Buttons to input
 	BTN_DDR = 0x00;
 
+	cli();
+
 	init_lcd();
 
 	init_steering();
@@ -44,6 +46,8 @@ int main(void)
 	uint8_t dir = 0;
 	uint8_t dc = 0;
 
+	sei();
+
 	/* Revert to neutral steering position, motor off on button press */
 	for (;;) {
 		tacho_update();
@@ -51,10 +55,10 @@ int main(void)
 		uint8_t pressed = !(BTN_PIN & BTN0);
 
 		if (pressed) {
-		
+
 			steering_set_direction2(dir);
 			dir += 10;
-			
+
 			motor_set_duty_cycle2(dc);
 			dc++;
 		}

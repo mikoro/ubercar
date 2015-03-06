@@ -57,7 +57,9 @@
 #define TACHO_TCRB		TCCR5B
 #define TACHO_TCRC		TCCR5C
 #define TACHO_TCNT		TCNT5
+#define TACHO_TIMSK		TIMSK5
 #define TACHO0			BIT(PL2)
+#define TACHO_ICF_vect		TIMER5_ICF_vect
 
 #define REFCLK_TCRA		TCCR3A
 #define REFCLK_TCRB		TCCR3B
