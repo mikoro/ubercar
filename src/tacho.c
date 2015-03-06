@@ -8,8 +8,8 @@
 
 static fix8_t avg = F8(0);
 
-static const fix8_t alpha = F8(0.1);
-static const fix8_t oneminusalpha = F8(0.9);
+static const fix8_t alpha = F8(0.25);
+static const fix8_t oneminusalpha = F8(0.75);
 
 static void update_screen(void) {
 	static uint16_t last_ref = 0;

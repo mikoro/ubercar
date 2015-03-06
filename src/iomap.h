@@ -67,4 +67,7 @@
 #define REFCLK_TCNT		TCNT3
 #define REFCLK_OCR		OCR3A
 
+#define IRSENS_DDR		DDRA
+#define IRSENS_PIN		PINA
+
 #endif

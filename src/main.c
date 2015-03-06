@@ -51,6 +51,7 @@ int main(void)
 	/* Revert to neutral steering position, motor off on button press */
 	for (;;) {
 		tacho_update();
+		irsens_update();
 
 		uint8_t pressed = !(BTN_PIN & BTN0);
 

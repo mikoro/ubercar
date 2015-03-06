@@ -46,11 +46,11 @@ static const fix8_t fix8_one = 0x0100;     /*!< fix8_t value of 1 */
 /* Conversion functions between fix8_t and float/integer.
  * These are inlined to allow compiler to optimize away constant numbers
  */
-static inline fix8_t  fix8_from_int(int8_t a) { return a * fix8_one; }
+static inline fix8_t  fix8_from_int(uint8_t a) { return a * fix8_one; }
 static inline float   fix8_to_float(fix8_t a) { return (float)a / fix8_one; }
 static inline double  fix8_to_dbl(fix8_t a)   { return (double)a / fix8_one; }
 
-static inline int8_t fix8_to_int(fix8_t a)
+static inline uint8_t fix8_to_int(fix8_t a)
 {
 #ifdef FIXMATH_NO_ROUNDING
     return (a >> 8);

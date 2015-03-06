@@ -87,6 +87,17 @@ void init_lcd() {
 		for (;;);
 	}
 
+	/*
+	send_byte(0x51);
+	send_byte(0x0a);
+	LCD_UBRRL = 25;
+
+	if (read_byte() != 0x06) {
+		LED_PORT = LED0|LED1;
+		for (;;);
+	}
+	*/
+
 	// Set opaque text
 	send_byte(0x4f);
 	send_byte(0x01);
