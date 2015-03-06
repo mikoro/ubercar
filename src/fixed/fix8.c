@@ -57,7 +57,7 @@ fix8_t fix8_ssub(fix8_t a, fix8_t b)
 	return result;
 }
 #endif
-/*
+
 fix8_t fix8_mul(fix8_t inArg0, fix8_t inArg1)
 {
 	int32_t product = (int32_t)inArg0 * inArg1;
@@ -96,7 +96,6 @@ fix8_t fix8_mul(fix8_t inArg0, fix8_t inArg1)
 	return result;
 #endif
 }
-*/
 
 /* 8-bit implementation of fix16_mul. Fastest on e.g. Atmel AVR.
  * Uses 8*8->16bit multiplications, and also skips any bytes that

@@ -38,7 +38,7 @@ int main(void)
 
 	init_motor();
 	motor_set_duty_cycle2(0);
-	motor_set_enabled(0);
+	motor_set_enabled(1);
 
 	init_tacho();
 

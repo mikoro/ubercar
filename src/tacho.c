@@ -4,19 +4,33 @@
 #include "iomap.h"
 #include "lcd.h"
 
+#include "fixed/fix8.h"
+
+static fix8_t avg = F8(0);
+
+static const fix8_t alpha = F8(0.1);
+static const fix8_t oneminusalpha = F8(0.9);
+
 static void update_screen(void) {
 	static uint16_t last_ref = 0;
 	static uint16_t last_tacho = 0;
 
-#define TACHO_UPDATE_INTERVAL 62500
+#define TACHO_UPDATE_INTERVAL 15625
 
 	uint16_t elapsed = REFCLK_TCNT - last_ref;
 	if (elapsed >= TACHO_UPDATE_INTERVAL) {
 		uint16_t tachos = TACHO_TCNT - last_tacho;
 		last_ref = REFCLK_TCNT;
 		last_tacho = TACHO_TCNT;
-		uint16_t x = (tachos * 62500) / elapsed;
-		lcd_printf(4, "TACHO %u r/s  ", x);
+		int8_t x = (tachos * 62500) / elapsed;
+
+		fix8_t xf = fix8_from_int(x);
+
+		avg = fix8_add(fix8_mul(alpha, xf), fix8_mul(oneminusalpha, avg));
+
+		int8_t val = fix8_to_int(avg);
+
+		lcd_printf(4, "TACHO %d r/s  ", val);
 	}
 }
 
