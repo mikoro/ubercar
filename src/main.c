@@ -1,6 +1,7 @@
 #include <avr/interrupt.h>
 
 #include "iomap.h"
+#include "led.h"
 #include "button.h"
 #include "lcd.h"
 #include "steering.h"
@@ -13,10 +14,7 @@ int main(void)
 {
 	cli();
 	
-	// Leds to output
-	LED_DDR = LED0 | LED1;
-	LED_PORT = 0x00;
-
+	init_led();
 	init_button();
 	//init_lcd();
 	init_steering();
