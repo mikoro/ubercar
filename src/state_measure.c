@@ -13,7 +13,7 @@ void state_measure_start()
 	motor_set_duty_cycle2(0);
 	motor_set_enabled(1);
 	
-	steering_set_direction2(127);
+	steering_set_direction(0);
 	steering_set_enabled(1);
 	
 	lcd_printf(0, "MEASURE");
