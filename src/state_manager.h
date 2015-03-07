@@ -1,5 +1,5 @@
-#ifndef CAR_STATES_H
-#define CAR_STATES_H
+#ifndef CAR_STATE_MANAGER_H
+#define CAR_STATE_MANAGER_H
 
 // remember to try -fshort-enums!
 typedef enum { STATE_IDLE, STATE_DRIVE, STATE_MEASURE, STATE_RECOVER, NUM_STATES } state_t;
