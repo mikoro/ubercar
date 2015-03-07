@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void init_irsens();
+void irsens_init();
 void irsens_update();
 uint8_t irsens_get_direction();
 

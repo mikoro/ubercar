@@ -18,7 +18,7 @@ static void update_screen(void) {
 		   STEER_OCRA);
 }
 
-void init_steering(void) {
+void steering_init(void) {
 	// Enable output pin
 	STEER_PORT &= ~STEER0;
 	STEER_DDR |= STEER0;

@@ -10,7 +10,7 @@ typedef struct {
 	state_proc_t update_proc;
 } state_info_t;
 
-void init_state_manager();
+void state_manager_init();
 void state_manager_run();
 void state_manager_set_state(state_t new_state);
 

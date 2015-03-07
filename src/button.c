@@ -7,7 +7,7 @@ static uint8_t last_state = 0;
 static uint8_t was_pressed = 0;
 static uint8_t was_released = 0;
 
-void init_button()
+void button_init()
 {
 	// button to input
 	BTN_DDR &= ~BTN0;

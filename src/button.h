@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void init_button();
+void button_init();
 void button_update();
 uint8_t button_is_down(); // no debounce (immediate)
 uint8_t button_was_pressed(); // debounced (possible 20 ms delay)

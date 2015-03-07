@@ -16,7 +16,7 @@ static void update_screen(void) {
 		   over ? "(Over!)" : "");
 }
 
-void init_motor(void) {
+void motor_init(void) {
 	// Enable output pin
 	MOTORPWM_PORT &= ~MOTORPWM0;
 	MOTORPWM_DDR |= MOTORPWM0;

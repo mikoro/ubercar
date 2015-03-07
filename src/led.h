@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void init_led();
+void led_init();
 void led_set0(uint8_t state);
 void led_set1(uint8_t state);
 void led_toggle0();

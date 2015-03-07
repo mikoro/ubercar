@@ -1,7 +1,7 @@
 #include "led.h"
 #include "iomap.h"
 
-void init_led()
+void led_init()
 {
 	// set led pins to output
 	LED_DDR = LED0 | LED1;

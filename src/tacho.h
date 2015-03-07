@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void init_tacho();
+void tacho_init();
 uint16_t tacho_get_speed();
 
 #endif

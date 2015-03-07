@@ -30,7 +30,7 @@ static void send_str(const char *s) {
 		send_byte(*s);
 }
 
-void print_str(uint8_t line, const char *str) {
+void lcd_print_str(uint8_t line, const char *str) {
 	send_byte(0x73);
 	send_byte(0x00);
 	send_byte(line);
@@ -51,7 +51,7 @@ void lcd_printf(uint8_t line, const char *fmt, ...) {
 	va_start(args, fmt);
 	uint8_t written = vsnprintf(buffer, 256, fmt, args);
 	buffer[written] = 0;
-	print_str(line, buffer);
+	lcd_print_str(line, buffer);
 	va_end(args);
 }
 
@@ -68,7 +68,7 @@ void print_ch(uint8_t col, uint8_t row, uint8_t b) {
 	}
 }
 
-void init_lcd() {
+void lcd_init() {
 	// 8 bits, no parity, 1 stop bit, 9600 baud
 
 	// wait for LCD controller to be ready

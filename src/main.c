@@ -14,14 +14,14 @@ int main(void)
 {
 	cli();
 	
-	init_led();
-	init_button();
-	//init_lcd();
-	init_steering();
-	init_motor();
-	init_tacho();
-	init_irsens();
-	init_state_manager();
+	led_init();
+	button_init();
+	//lcd_init();
+	steering_init();
+	motor_init();
+	tacho_init();
+	irsens_init();
+	state_manager_init();
 	
 	sei();
 	

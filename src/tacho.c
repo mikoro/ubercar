@@ -5,7 +5,7 @@
 
 static volatile uint16_t tachos = 0;
 
-void init_tacho()
+void tacho_init()
 {
 	// Set clock pin to input
 	TACHO_DDR &= ~TACHO0;

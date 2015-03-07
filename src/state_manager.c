@@ -15,7 +15,7 @@ static state_info_t const state_procs[NUM_STATES] = {
 	{state_recover_start, state_recover_update},
 };
 
-void init_state_manager()
+void state_manager_init()
 {
 	// Reference clock (interrupt)
 	STATEMANREF_TCCRA = BIT(WGM01); // CTC mode
