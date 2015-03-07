@@ -22,8 +22,8 @@ void init_motor(void) {
 	MOTORPWM_DDR |= MOTORPWM0;
 
 	// Fast PWM, no divisor
-	MOTORPWM_TCRA = BIT(WGM11);
-	MOTORPWM_TCRB = BIT(WGM12) | BIT(WGM13) | BIT(CS10);
+	MOTORPWM_TCCRA = BIT(WGM11);
+	MOTORPWM_TCCRB = BIT(WGM12) | BIT(WGM13) | BIT(CS10);
 
 	// PWM frequency 20kHz
 	MOTORPWM_ICR = 800;
@@ -40,10 +40,10 @@ void init_motor(void) {
 
 void motor_set_enabled(uint8_t en) {
 	if (en) {
-		MOTORPWM_TCRA |= BIT(COM4A1); // PWM on (non-inverted, i.e normally high)
+		MOTORPWM_TCCRA |= BIT(COM4A1); // PWM on (non-inverted, i.e normally high)
 		MOTORCTL_PORT |= MOTORCTL_INA; // motor on CW
 	} else {
-		MOTORPWM_TCRA &= ~BIT(COM4A1); // PWM disabled
+		MOTORPWM_TCCRA &= ~BIT(COM4A1); // PWM disabled
 		MOTORCTL_PORT &= ~MOTORCTL_INA; // stop to GND
 	}
 	

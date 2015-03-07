@@ -13,7 +13,7 @@ void init_tacho()
 	
 	// External counter
 	// Counter mode, external clock, clock on falling edge
-	TACHO_TCRB = BIT(CS51) | BIT(CS52);
+	TACHO_TCCRB = BIT(CS51) | BIT(CS52);
 	TACHO_TCNT = 0;
 	
 	// Interrupt reference

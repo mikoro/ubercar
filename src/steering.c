@@ -14,7 +14,7 @@
  
 static void update_screen(void) {
 	lcd_printf(1, "STEER %s %u",
-		   (STEER_TCRA & BIT(COM1A1)) ? "ON " : "OFF",
+		   (STEER_TCCRA & BIT(COM1A1)) ? "ON " : "OFF",
 		   STEER_OCRA);
 }
 
@@ -24,8 +24,8 @@ void init_steering(void) {
 	STEER_DDR |= STEER0;
 
 	// Fast PWM, divide clock by 1
-	STEER_TCRA = BIT(WGM11);
-	STEER_TCRB = BIT(WGM12) | BIT(WGM13) | BIT(CS10);
+	STEER_TCCRA = BIT(WGM11);
+	STEER_TCCRB = BIT(WGM12) | BIT(WGM13) | BIT(CS10);
 
 	// PWM period 4ms (250 Hz), set TOP accordingly
 	STEER_ICR = 64000;
@@ -37,9 +37,9 @@ void init_steering(void) {
 void steering_set_enabled(uint8_t en) {
 
 	if (en) { // PWM on (inverted, i.e normally low)
-		STEER_TCRA |= BIT(COM1A1) | BIT(COM1A0);
+		STEER_TCCRA |= BIT(COM1A1) | BIT(COM1A0);
 	} else { // PWM disabled
-		STEER_TCRA &= ~(BIT(COM1A1) | BIT(COM1A0));
+		STEER_TCCRA &= ~(BIT(COM1A1) | BIT(COM1A0));
 	}
 
 	update_screen();
