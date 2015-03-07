@@ -1,6 +1,8 @@
 #ifndef CAR_IRSENS_H
 #define CAR_IRSENS_H
 
+#include <stdint.h>
+
 void init_irsens();
 void irsens_update();
 uint8_t irsens_get_direction();
