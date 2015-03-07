@@ -19,6 +19,7 @@
 #define SENS_PIN		PINA
 #define SENS_DDR		DDRA
 
+// 16-bit Timer/Counter1 (PWM)
 #define STEER_PORT		PORTB
 #define STEER_DDR		DDRB
 #define STEER_TCRA		TCCR1A
@@ -28,6 +29,7 @@
 #define STEER_OCRA		OCR1A
 #define STEER0			BIT(PB5)
 
+// 16-bit Timer/Counter4 (PWM)
 #define MOTORPWM_PORT	PORTH
 #define MOTORPWM_DDR	DDRH
 #define MOTORPWM_TCRA	TCCR4A
@@ -54,20 +56,33 @@
 #define LCD_UCSRC		UCSR1C
 #define LCD_UDR			UDR1
 
+// 16-bit Timer/Counter5 (Counter)
+#define TACHO_PORT		PORTL
 #define TACHO_DDR		DDRL
 #define TACHO_TCRA		TCCR5A
 #define TACHO_TCRB		TCCR5B
 #define TACHO_TCRC		TCCR5C
+#define TACHO_ICR		ICR5
+#define TACHO_OCRA		OCR5A
 #define TACHO_TCNT		TCNT5
-#define TACHO_TIMSK		TIMSK5
 #define TACHO0			BIT(PL2)
-#define TACHO_ICF_vect	TIMER5_ICF_vect
 
-#define REFCLK_TCRA		TCCR3A
-#define REFCLK_TCRB		TCCR3B
-#define REFCLK_TCRC		TCCR3C
-#define REFCLK_TCNT		TCNT3
-#define REFCLK_OCR		OCR3A
+// 16-bit Timer/Counter3 (Interrupt reference)
+#define TACHOREF_TCCRA		TCCR3A
+#define TACHOREF_TCCRB		TCCR3B
+#define TACHOREF_TCCRC		TCCR3C
+#define TACHOREF_OCRA		OCR3A
+#define TACHOREF_TCNT		TCNT3
+#define TACHOREF_TIMSK		TIMSK3
+#define TACHOREF_COMPA_vect	TIMER3_COMPA_vect
+
+// 8-bit Timer/Counter0 (Interrupt reference)
+#define STATEMANREF_TCCRA		TCCR0A
+#define STATEMANREF_TCCRB		TCCR0B
+#define STATEMANREF_OCRA		OCR0A
+#define STATEMANREF_TCNT		TCNT0
+#define STATEMANREF_TIMSK		TIMSK0
+#define STATEMANREF_COMPA_vect	TIMER0_COMPA_vect
 
 #define IRSENS_DDR		DDRA
 #define IRSENS_PIN		PINA
