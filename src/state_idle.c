@@ -1,5 +1,7 @@
 #include "state_manager.h"
 #include "iomap.h"
+#include "led.h"
+#include "button.h"
 #include "lcd.h"
 #include "motor.h"
 #include "steering.h"
@@ -19,5 +21,6 @@ void state_idle_start()
 
 void state_idle_update()
 {
-	// do nothing
+	if (button_was_released())
+		state_manager_set_state(STATE_DRIVE);
 }
