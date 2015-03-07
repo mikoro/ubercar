@@ -17,7 +17,8 @@ void state_recover_init()
 	steering_set_direction(0);
 	steering_set_enabled(1);
 	
-	lcd_printf(0, "RECOVER");
+	lcd_clear();
+	lcd_printf(0, 1, 3, 255, 255, 255, "RECOVER");
 }
 
 void state_recover_update_fixed()

@@ -1,5 +1,6 @@
 #include <avr/io.h>
 
+#include "irsens.h"
 #include "iomap.h"
 #include "lcd.h"
 
@@ -20,6 +21,7 @@ void irsens_update() {
 	uint8_t high = 255;
 	int8_t i;
 
+/*
 	lcd_printf(8, "IRSNS %c%c%c%c%c%c%c%c",
 		   v & BIT(7) ? 'X' : 'o',
 		   v & BIT(6) ? 'X' : 'o',
@@ -29,7 +31,7 @@ void irsens_update() {
 		   v & BIT(2) ? 'X' : 'o',
 		   v & BIT(1) ? 'X' : 'o',
 		   v & BIT(0) ? 'X' : 'o');
-
+*/
 	for (i = 0; i < 8; ++i) {
 		if (v & BIT(i)) {
 			high = i;
@@ -59,7 +61,7 @@ void irsens_update() {
 
 	//lcd_printf(10, "B l %u h %u           ", low, high);
 	//lcd_printf(11, "M l %u h %u   ", mappedl, mappedh);
-	lcd_printf(9,  "IRSNS %u    ", val);
+	//lcd_printf(9,  "IRSNS %u    ", val);
 }
 
 uint8_t irsens_get_direction() {

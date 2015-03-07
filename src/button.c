@@ -1,7 +1,7 @@
+#include <util/delay.h>
+
 #include "button.h"
 #include "iomap.h"
-
-#include <util/delay.h>
 
 static uint8_t last_state = 0;
 static uint8_t was_pressed = 0;

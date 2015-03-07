@@ -1,3 +1,5 @@
+#include <util/delay.h>
+
 #include "led.h"
 #include "iomap.h"
 
@@ -34,4 +36,17 @@ void led_toggle0()
 void led_toggle1()
 {
 	LED_PORT ^= LED1;
+}
+
+void led_error_loop()
+{
+	led_set0(0);
+	led_set1(0);
+	
+	for (;;)
+	{
+		led_toggle0();
+		led_toggle1();
+		_delay_ms(500);
+	}
 }

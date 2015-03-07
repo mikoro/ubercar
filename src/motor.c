@@ -1,5 +1,6 @@
 #include <avr/io.h>
 
+#include "motor.h"
 #include "iomap.h"
 #include "lcd.h"
 
@@ -10,10 +11,7 @@
 static uint8_t over = 0;
 
 static void update_screen(void) {
-	lcd_printf(2, "MOTOR %s %u %s",
-		   (MOTORCTL_PORT & MOTORCTL_INA) ? "ON " : "OFF",
-		   MOTORPWM_OCRA,
-		   over ? "(Over!)" : "");
+	
 }
 
 void motor_init(void) {

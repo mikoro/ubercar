@@ -1,10 +1,15 @@
+#include <avr/interrupt.h>
+
 #include "manager.h"
 #include "states.h"
 #include "iomap.h"
-#include "button.h"
 #include "led.h"
-
-#include <avr/interrupt.h>
+#include "button.h"
+#include "lcd.h"
+#include "motor.h"
+#include "steering.h"
+#include "tacho.h"
+#include "irsens.h"
 
 typedef void (*state_proc_t)(void);
 
@@ -25,6 +30,12 @@ static state_t current_state = STATE_IDLE;
 static volatile uint8_t ms_elapsed = 0;
 static uint8_t led_toggle_counter = 0;
 
+ISR(STATEMANREF_COMPA_vect)
+{
+	++ms_elapsed;
+	STATEMANREF_TCNT = 0;
+}
+
 void manager_init()
 {
 	// Reference clock (interrupt)
@@ -35,16 +46,16 @@ void manager_init()
 	STATEMANREF_TCNT = 0;
 }
 
-ISR(STATEMANREF_COMPA_vect)
-{
-	++ms_elapsed;
-	STATEMANREF_TCNT = 0;
-}
-
 void manager_set_state(state_t new_state)
 {
 	current_state = new_state;
 	state_procs[current_state].init_proc();
+}
+
+#define PRINT_DEBUG
+static void print_debug_values()
+{
+	lcd_printf(0, 1, 3, 255, 255, 255, "print stuff");
 }
 
 void manager_run()
@@ -57,6 +68,10 @@ void manager_run()
 		
 		if (++led_toggle_counter % 4 == 0)
 			led_toggle0();
+			
+		#ifdef PRINT_DEBUG
+		print_debug_values();
+		#endif
 		
 		// lock the fixed loop to 20 Hz
 		while (ms_elapsed < 50)

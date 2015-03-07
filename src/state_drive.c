@@ -17,7 +17,8 @@ void state_drive_init()
 	steering_set_direction(0);
 	steering_set_enabled(1);
 	
-	lcd_printf(0, "DRIVE");
+	lcd_clear();
+	lcd_printf(0, 1, 3, 255, 255, 255, "DRIVE");
 }
 
 void state_drive_update_fixed()

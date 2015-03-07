@@ -17,7 +17,9 @@ void state_idle_init()
 	steering_set_direction(0);
 	steering_set_enabled(1);
 	
-	lcd_printf(0, "IDLE");
+	lcd_clear();
+	lcd_set_bg_color(255, 0, 0);
+	lcd_printf(0, 1, 3, 255, 255, 255, "IDLE");
 }
 
 void state_idle_update_fixed()

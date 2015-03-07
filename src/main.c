@@ -1,6 +1,5 @@
 #include <avr/interrupt.h>
 
-#include "iomap.h"
 #include "led.h"
 #include "button.h"
 #include "lcd.h"

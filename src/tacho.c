@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#include "tacho.h"
 #include "iomap.h"
 
 static volatile uint16_t tachos = 0;
@@ -34,7 +35,7 @@ ISR(TACHOREF_COMPA_vect)
 	TACHOREF_TCNT = 0;
 }
 
-uint8_t tacho_get_speed()
+uint16_t tacho_get_speed()
 {
 	return tachos;
 }
