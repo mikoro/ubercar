@@ -2,7 +2,7 @@
 #define CAR_IRSENS_H
 
 void init_irsens();
-void update_irsens();
+void irsens_update();
 uint8_t irsens_get_direction();
 
 #endif

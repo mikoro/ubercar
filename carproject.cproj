@@ -148,6 +148,24 @@
     <Compile Include="src\motor.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\state_manager.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\state_manager.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\state_drive.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\state_idle.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\state_measure.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\state_recover.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\steering.c">
       <SubType>compile</SubType>
     </Compile>
