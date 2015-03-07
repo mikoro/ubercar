@@ -4,6 +4,7 @@
 #include "iomap.h"
 
 static volatile uint16_t tachos = 0;
+static volatile uint16_t distance = 0;
 
 void tacho_init()
 {
@@ -27,6 +28,8 @@ void tacho_init()
 ISR(TACHOREF_COMPA_vect)
 {
 	tachos = TACHO_TCNT;
+	distance += tachos; // TODO check if scaling is needed
+	
 	TACHO_TCNT = 0;
 	TACHOREF_TCNT = 0;
 }
@@ -34,4 +37,14 @@ ISR(TACHOREF_COMPA_vect)
 uint8_t tacho_get_speed()
 {
 	return tachos;
+}
+
+uint16_t tacho_get_distance()
+{
+	return distance;
+}
+
+void tacho_reset_distance()
+{
+	distance = 0;
 }
