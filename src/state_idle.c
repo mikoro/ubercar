@@ -1,4 +1,5 @@
-#include "state_manager.h"
+#include "states.h"
+#include "manager.h"
 #include "iomap.h"
 #include "led.h"
 #include "button.h"
@@ -8,7 +9,7 @@
 #include "tacho.h"
 #include "irsens.h"
 
-void state_idle_start()
+void state_idle_init()
 {
 	motor_set_duty_cycle2(0);
 	motor_set_enabled(1);
@@ -19,8 +20,12 @@ void state_idle_start()
 	lcd_printf(0, "IDLE");
 }
 
-void state_idle_update()
+void state_idle_update_fixed()
 {
 	if (button_was_released())
-		state_manager_set_state(STATE_DRIVE);
+		manager_set_state(STATE_DRIVE);
+}
+
+void state_idle_update_fast()
+{
 }

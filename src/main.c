@@ -8,7 +8,7 @@
 #include "motor.h"
 #include "tacho.h"
 #include "irsens.h"
-#include "state_manager.h"
+#include "manager.h"
 
 int main(void)
 {
@@ -21,10 +21,10 @@ int main(void)
 	motor_init();
 	tacho_init();
 	irsens_init();
-	state_manager_init();
+	manager_init();
 	
 	sei();
 	
-	state_manager_set_state(STATE_IDLE);
-	state_manager_run();
+	manager_set_state(STATE_IDLE);
+	manager_run();
 }
