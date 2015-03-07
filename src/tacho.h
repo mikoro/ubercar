@@ -4,6 +4,6 @@
 #include <stdint.h>
 
 void init_tacho();
-uint8_t tacho_get_speed();
+uint16_t tacho_get_speed();
 
 #endif

@@ -3,7 +3,7 @@
 
 #include "iomap.h"
 
-static uint16_t tachos = 0;
+static volatile uint16_t tachos = 0;
 
 void init_tacho()
 {
@@ -33,5 +33,5 @@ ISR(TACHOREF_COMPA_vect)
 
 uint8_t tacho_get_speed()
 {
-	return 0;
+	return tachos;
 }
