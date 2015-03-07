@@ -4,20 +4,10 @@
 #include "iomap.h"
 #include "lcd.h"
 
-/* OCR must be at least about 70 for the wheels to start turning from
- * idle position
- */
-
-static uint8_t over = 0;
-
-static void update_screen(void) {
-	
-}
-
 void motor_init(void) {
 	// Enable output pin
-	MOTORPWM_PORT &= ~MOTORPWM0;
 	MOTORPWM_DDR |= MOTORPWM0;
+	MOTORPWM_PORT &= ~MOTORPWM0;
 
 	// Fast PWM, no divisor
 	MOTORPWM_TCCRA = BIT(WGM11);
@@ -27,42 +17,68 @@ void motor_init(void) {
 	MOTORPWM_ICR = 800;
 	MOTORPWM_OCRA = 0;
 
-	// Set up controlpins
+	// Set up control pins
 	MOTORCTL_DDR |= MOTORCTL_INA | MOTORCTL_INB; // INx as outputs
 	MOTORCTL_DDR &= ~(MOTORCTL_ENA | MOTORCTL_ENB); // ENx as inputs
+	MOTORCTL_DDR &= ~MOTORCTL_CS; // CS as input
 	MOTORCTL_PORT &= ~(MOTORCTL_INA | MOTORCTL_INB); // stop to GND
 	MOTORCTL_PORT |= MOTORCTL_ENA | MOTORCTL_ENB; // enable pull-ups
-
-	update_screen();
+	MOTORCTL_PORT &= ~MOTORCTL_CS; // disable pull-up
+	
+	// set up ADC
+	ADMUX |= BIT(REFS1) | BIT(REFS0); // internal 2.56 V reference
+	ADMUX |= BIT(MUX2); // select ADC12 as input
+	ADCSRB |= BIT(MUX5);
+	ADCSRA |= BIT(ADPS2) | BIT(ADPS1) | BIT(ADPS0); // prescaler 128 -> 125 kHz
+	ADCSRA |= BIT(ADATE); // enable auto trigger
+	ADCSRA |= BIT(ADEN); // enable ADC
 }
 
 void motor_set_enabled(uint8_t en) {
 	if (en) {
 		MOTORPWM_TCCRA |= BIT(COM4A1); // PWM on (non-inverted, i.e normally high)
-		MOTORCTL_PORT |= MOTORCTL_INA; // motor on CW
 	} else {
 		MOTORPWM_TCCRA &= ~BIT(COM4A1); // PWM disabled
-		MOTORCTL_PORT &= ~MOTORCTL_INA; // stop to GND
+		MOTORCTL_PORT &= ~(MOTORCTL_INA | MOTORCTL_INB); // stop to GND
 	}
-	
-	update_screen();
 }
 
-// Input range in 0..800
-void motor_set_duty_cycle(uint16_t dc) {
-	if (dc > 267) {
-		// Over 1/3 power specified, limiting
-		dc = 267;
-		over = 1;
-	} else {
-		over = 0;
-	}
+void motor_set_direction(motor_dir_t dir)
+{
+	MOTORCTL_PORT &= ~(MOTORCTL_INA | MOTORCTL_INB); // stop to GND
 	
-	MOTORPWM_OCRA = dc;
-	update_screen();
+	if (dir == MOTOR_FORWARDS)
+		MOTORCTL_PORT |= MOTORCTL_INA; // motor on CW
+	else
+		MOTORCTL_PORT |= MOTORCTL_INB; // motor on CCW
 }
 
-// Input range 0..255, motor should start spinning immediately
-void motor_set_duty_cycle2(uint8_t dc) {
-	motor_set_duty_cycle(70 + dc);
+// Input range 0 .. 255
+// Actual full duty cycle range is 0 .. 800
+// 1/3 power is 267, so this never power too high
+void motor_set_power(uint8_t power)
+{
+	MOTORPWM_OCRA = power;
+}
+
+// Returns 0 if everything is ok
+// 1 if half bridge A is in error
+// 2 if half bridge B is in error
+// 3 if both half bridges are in error
+uint8_t motor_get_status()
+{
+	uint8_t status = ~MOTORCTL_PIN;
+	uint8_t result = (status & MOTORCTL_ENA) ? 0x01 : 0x00;
+	result |= (status & MOTORCTL_ENB) ? 0x02 : 0x00;
+	
+	return result;
+}
+
+uint8_t motor_get_current()
+{
+	//uint16_t result = ADCL;
+	//result |= (ADCH << 8);
+	
+	// ADC = (Vin * 1024) / Vref
+	return ADC;
 }

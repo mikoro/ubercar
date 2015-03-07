@@ -11,8 +11,9 @@
 
 void state_idle_init()
 {
-	motor_set_duty_cycle2(0);
+	motor_set_power(0);
 	motor_set_enabled(1);
+	motor_set_direction(MOTOR_FORWARDS);
 	
 	steering_set_direction(0);
 	steering_set_enabled(1);
@@ -24,8 +25,6 @@ void state_idle_init()
 
 void state_idle_update_fixed()
 {
-	if (button_was_released())
-		manager_set_state(STATE_DRIVE);
 }
 
 void state_idle_update_fast()

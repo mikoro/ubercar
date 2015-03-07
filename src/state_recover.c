@@ -11,8 +11,9 @@
 
 void state_recover_init()
 {
-	motor_set_duty_cycle2(0);
+	motor_set_power(0);
 	motor_set_enabled(1);
+	motor_set_direction(MOTOR_FORWARDS);
 	
 	steering_set_direction(0);
 	steering_set_enabled(1);

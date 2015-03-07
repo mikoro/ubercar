@@ -46,6 +46,7 @@
 #define MOTORCTL_INB	BIT(PK1)
 #define MOTORCTL_ENA	BIT(PK2)
 #define MOTORCTL_ENB	BIT(PK3)
+#define MOTORCTL_CS		BIT(PK4)
 
 #define LCD_PORT		PORTD
 #define LCD_DDR			DDRD
