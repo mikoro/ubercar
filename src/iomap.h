@@ -6,13 +6,15 @@
 #define BIT(x)			(1<<(x))
 
 #define LED_PORT		PORTC
+#define LED_PIN			PINC
 #define LED_DDR			DDRC
-#define LED0			BIT(0)
-#define LED1			BIT(1)
+#define LED0			BIT(PC0)
+#define LED1			BIT(PC1)
 
+#define BTN_PORT		PORTE
 #define BTN_PIN			PINE
 #define BTN_DDR			DDRE
-#define BTN0			BIT(5)
+#define BTN0			BIT(PE5)
 
 #define SENS_PIN		PINA
 #define SENS_DDR		DDRA
@@ -26,22 +28,22 @@
 #define STEER_OCRA		OCR1A
 #define STEER0			BIT(PB5)
 
-#define MOTORPWM_PORT		PORTH
-#define MOTORPWM_DDR		DDRH
-#define MOTORPWM_TCRA		TCCR4A
-#define MOTORPWM_TCRB		TCCR4B
-#define MOTORPWM_TCRC		TCCR4C
-#define MOTORPWM_ICR		ICR4
-#define MOTORPWM_OCRA		OCR4A
+#define MOTORPWM_PORT	PORTH
+#define MOTORPWM_DDR	DDRH
+#define MOTORPWM_TCRA	TCCR4A
+#define MOTORPWM_TCRB	TCCR4B
+#define MOTORPWM_TCRC	TCCR4C
+#define MOTORPWM_ICR	ICR4
+#define MOTORPWM_OCRA	OCR4A
 #define MOTORPWM0		BIT(PH3)
 
-#define MOTORCTL_PORT		PORTK
-#define MOTORCTL_PIN		PINK
-#define MOTORCTL_DDR		DDRK
-#define MOTORCTL_INA		BIT(PK0)
-#define MOTORCTL_INB		BIT(PK1)
-#define MOTORCTL_ENA		BIT(PK2)
-#define MOTORCTL_ENB		BIT(PK3)
+#define MOTORCTL_PORT	PORTK
+#define MOTORCTL_PIN	PINK
+#define MOTORCTL_DDR	DDRK
+#define MOTORCTL_INA	BIT(PK0)
+#define MOTORCTL_INB	BIT(PK1)
+#define MOTORCTL_ENA	BIT(PK2)
+#define MOTORCTL_ENB	BIT(PK3)
 
 #define LCD_PORT		PORTD
 #define LCD_DDR			DDRD
@@ -59,7 +61,7 @@
 #define TACHO_TCNT		TCNT5
 #define TACHO_TIMSK		TIMSK5
 #define TACHO0			BIT(PL2)
-#define TACHO_ICF_vect		TIMER5_ICF_vect
+#define TACHO_ICF_vect	TIMER5_ICF_vect
 
 #define REFCLK_TCRA		TCCR3A
 #define REFCLK_TCRB		TCCR3B

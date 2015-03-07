@@ -115,6 +115,12 @@
     <Folder Include="src\fixed" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\button.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\button.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\fixed\fix8.c">
       <SubType>compile</SubType>
     </Compile>
