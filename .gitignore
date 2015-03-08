@@ -1,8 +1,8 @@
 *.o
 *.dep
 *~
-main.hex
-main.elf
+*.hex
+*.elf
 Debug/
 Release/
 *.atsuo
