@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "fixed/fix8.h"
+#include "fix8.h"
 
 void pid_steering_reset();
 void pid_motor_reset();
