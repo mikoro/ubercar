@@ -10,6 +10,6 @@ void motor_set_enabled(uint8_t en);
 void motor_set_direction(motor_dir_t dir);
 void motor_set_power(uint8_t power);
 uint8_t motor_get_status();
-uint8_t motor_get_current();
+uint16_t motor_get_current();
 
 #endif

@@ -55,10 +55,14 @@ void motor_set_direction(motor_dir_t dir)
 
 // Input range 0 .. 255
 // Actual full duty cycle range is 0 .. 800
-// 1/3 power is 267, so this never power too high
+// 1/3 power is 267, so this should never go too high
 void motor_set_power(uint8_t power)
 {
 	MOTORPWM_OCRA = power;
+	
+	// sanity check anyway
+	if (MOTORPWM_OCRA > 267)
+		MOTORPWM_OCRA = 267;
 }
 
 // Returns 0 if everything is ok
@@ -74,7 +78,7 @@ uint8_t motor_get_status()
 	return result;
 }
 
-uint8_t motor_get_current()
+uint16_t motor_get_current()
 {
 	//uint16_t result = ADCL;
 	//result |= (ADCH << 8);
