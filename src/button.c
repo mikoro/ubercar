@@ -22,8 +22,8 @@ void button_update()
 	
 	if (new_state != last_state)
 	{
+		// debounce
 		_delay_ms(20);
-		
 		new_state = !(BTN_PIN & BTN0);
 		
 		if (new_state != last_state)

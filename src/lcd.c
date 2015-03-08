@@ -7,6 +7,12 @@
 #include "iomap.h"
 #include "led.h"
 
+/*
+  LCD size:
+  width: 240 px
+  height: 320 px
+*/
+
 static void send_byte(uint8_t b) {
 	for (;;) {
 		uint8_t v = LCD_UCSRA;

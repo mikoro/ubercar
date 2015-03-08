@@ -35,9 +35,10 @@ ISR(TACHOREF_COMPA_vect)
 	TACHOREF_TCNT = 0;
 }
 
-uint16_t tacho_get_speed()
+uint8_t tacho_get_speed()
 {
-	return tachos;
+	// TODO scale speed so that with full power, speed is max ~255 (maybe leave a little head room)
+	return (uint8_t)(tachos / 0x01);
 }
 
 uint16_t tacho_get_distance()

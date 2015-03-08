@@ -29,6 +29,7 @@ void motor_init(void) {
 	ADMUX |= BIT(REFS1) | BIT(REFS0); // internal 2.56 V reference
 	ADMUX |= BIT(MUX2); // select ADC12 as input
 	ADCSRB |= BIT(MUX5);
+	ADMUX |= BIT(ADLAR); // left adjust (-> 8-bit resolution)
 	ADCSRA |= BIT(ADPS2) | BIT(ADPS1) | BIT(ADPS0); // prescaler 128 -> 125 kHz
 	ADCSRA |= BIT(ADATE); // enable auto trigger
 	ADCSRA |= BIT(ADEN); // enable ADC
@@ -78,11 +79,8 @@ uint8_t motor_get_status()
 	return result;
 }
 
-uint16_t motor_get_current()
+uint8_t motor_get_current()
 {
-	//uint16_t result = ADCL;
-	//result |= (ADCH << 8);
-	
-	// ADC = (Vin * 1024) / Vref
-	return ADC;
+	// ADCH = (Vin * 256) / Vref
+	return ADCH;
 }
