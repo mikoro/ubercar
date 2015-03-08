@@ -160,6 +160,12 @@
     <Compile Include="src\manager.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\measurer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\measurer.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\motor.c">
       <SubType>compile</SubType>
     </Compile>
