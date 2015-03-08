@@ -1,9 +1,11 @@
 #ifndef CAR_TACHO_H
 #define CAR_TACHO_H
 
-void init_tacho(void);
-void tacho_update();
+#include <stdint.h>
+
+void tacho_init();
 uint8_t tacho_get_speed();
+uint16_t tacho_get_distance();
+void tacho_reset_distance();
 
 #endif
-

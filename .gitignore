@@ -3,3 +3,6 @@
 *~
 main.hex
 main.elf
+Debug/
+Release/
+*.atsuo

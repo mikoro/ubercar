@@ -1,60 +1,52 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#include "tacho.h"
 #include "iomap.h"
-#include "lcd.h"
 
-#include "fixed/fix8.h"
+static volatile uint16_t tachos = 0;
+static volatile uint16_t distance = 0;
 
-static fix8_t avg = F8(0);
-
-static const fix8_t alpha = F8(0.25);
-static const fix8_t oneminusalpha = F8(0.75);
-
-static void update_screen(void) {
-	static uint16_t last_ref = 0;
-	static uint16_t last_tacho = 0;
-
-#define TACHO_UPDATE_INTERVAL 15625
-
-	uint16_t elapsed = REFCLK_TCNT - last_ref;
-	if (elapsed >= TACHO_UPDATE_INTERVAL) {
-		uint16_t tachos = TACHO_TCNT - last_tacho;
-		last_ref = REFCLK_TCNT;
-		last_tacho = TACHO_TCNT;
-		int8_t x = (tachos * 62500) / elapsed;
-
-		fix8_t xf = fix8_from_int(x);
-
-		avg = fix8_add(fix8_mul(alpha, xf), fix8_mul(oneminusalpha, avg));
-
-		int8_t val = fix8_to_int(avg);
-
-		lcd_printf(4, "TACHO %d r/s  ", val);
-	}
-}
-
-void init_tacho(void) {
+void tacho_init()
+{
 	// Set clock pin to input
 	TACHO_DDR &= ~TACHO0;
-
+	TACHO_PORT |= TACHO0; // pull-up
+	
+	// External counter
 	// Counter mode, external clock, clock on falling edge
-	OCR5A = 1;
-	TACHO_TCRA = 0x00;
-	TACHO_TCRB = BIT(CS51) | BIT(CS52);
-
-	// Base clock
-	REFCLK_TCRA = 0x00;
-	REFCLK_TCRB = BIT(CS32); // 256 divider
-
-	update_screen();
+	TACHO_TCCRB = BIT(CS51) | BIT(CS52);
+	TACHO_TCNT = 0;
+	
+	// Interrupt reference
+	TACHOREF_TCCRB = BIT(WGM32); // CTC mode
+	TACHOREF_TCCRB |= BIT(CS31) | BIT(CS30); // divide by 64
+	TACHOREF_TIMSK = BIT(OCIE3A); // enable compare interrupt
+	TACHOREF_OCRA = 15625; // 250 ms
+	TACHOREF_TCNT = 0;
 }
 
-void tacho_update() {
-	update_screen();
+ISR(TACHOREF_COMPA_vect)
+{
+	tachos = TACHO_TCNT;
+	distance += tachos; // TODO check if scaling is needed
+	
+	TACHO_TCNT = 0;
+	TACHOREF_TCNT = 0;
 }
 
-uint8_t tacho_get_speed() {
-	return fix8_to_int(avg);
+uint8_t tacho_get_speed()
+{
+	// TODO scale speed so that with full power, speed is max ~255 (maybe leave a little head room)
+	return (uint8_t)(tachos / 0x01);
 }
 
+uint16_t tacho_get_distance()
+{
+	return distance;
+}
+
+void tacho_reset_distance()
+{
+	distance = 0;
+}
