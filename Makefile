@@ -1,9 +1,21 @@
-################################################################################
-# Simple makefile for the led example
-################################################################################
-
-TARGET := main
-SRC := src/main.c src/steering.c src/motor.c src/lcd.c src/tacho.c src/irsens.c src/fixed/fix8.c
+TARGET := carproject
+SRC := 	src/button.c \
+		src/fix8.c \
+		src/irsens.c \
+		src/lcd.c \
+		src/led.c \
+		src/main.c \
+		src/manager.c \
+		src/measurer.c \
+		src/motor.c \
+		src/pid.c \
+		src/state_drive.c \
+		src/state_error.c \
+		src/state_idle.c \
+		src/state_measure.c \
+		src/state_recover.c \
+		src/steering.c \
+		src/tacho.c
 
 RM := rm -rf
 OBJS := $(SRC:%.c=%.o)
