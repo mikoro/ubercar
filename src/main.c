@@ -15,7 +15,7 @@ int main(void)
 	
 	led_init();
 	button_init();
-	//lcd_init();
+	lcd_init();
 	steering_init();
 	motor_init();
 	tacho_init();
