@@ -172,6 +172,12 @@
     <Compile Include="src\motor.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\pid.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\pid.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\states.h">
       <SubType>compile</SubType>
     </Compile>

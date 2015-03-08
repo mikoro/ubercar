@@ -10,6 +10,8 @@
 #include "steering.h"
 #include "tacho.h"
 #include "irsens.h"
+#include "measurer.h"
+#include "pid.h"
 
 void state_error_init()
 {
