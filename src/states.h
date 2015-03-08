@@ -17,4 +17,8 @@ void state_recover_init();
 void state_recover_update_fixed();
 void state_recover_update_fast();
 
+void state_error_init();
+void state_error_update_fixed();
+void state_error_update_fast();
+
 #endif

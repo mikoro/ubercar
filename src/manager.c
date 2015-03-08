@@ -24,6 +24,7 @@ static state_info_t const state_procs[NUM_STATES] = {
 	{state_drive_init, state_drive_update_fixed, state_drive_update_fast},
 	{state_measure_init, state_measure_update_fixed, state_measure_update_fast},
 	{state_recover_init, state_recover_update_fixed, state_recover_update_fast},
+	{state_error_init, state_error_update_fixed, state_error_update_fast},
 };
 
 static state_t current_state = STATE_IDLE;
@@ -65,6 +66,9 @@ void manager_run()
 		button_update();
 		
 		state_procs[current_state].update_fixed_proc();
+		
+		if (motor_get_status() != 0x00 && current_state != STATE_ERROR)
+			manager_set_state(STATE_ERROR);
 		
 		if (++led_toggle_counter % 4 == 0)
 			led_toggle0();

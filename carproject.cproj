@@ -172,6 +172,9 @@
     <Compile Include="src\state_drive.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\state_error.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\state_idle.c">
       <SubType>compile</SubType>
     </Compile>
