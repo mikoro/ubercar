@@ -16,8 +16,9 @@
 #define BTN_DDR			DDRE
 #define BTN0			BIT(PE5)
 
-#define SENS_PIN		PINA
-#define SENS_DDR		DDRA
+#define IRSENS_PORT		PORTA
+#define IRSENS_PIN		PINA
+#define IRSENS_DDR		DDRA
 
 // 16-bit Timer/Counter1 (PWM)
 #define STEER_PORT		PORTB
@@ -84,8 +85,5 @@
 #define STATEMANREF_TCNT		TCNT0
 #define STATEMANREF_TIMSK		TIMSK0
 #define STATEMANREF_COMPA_vect	TIMER0_COMPA_vect
-
-#define IRSENS_DDR		DDRA
-#define IRSENS_PIN		PINA
 
 #endif

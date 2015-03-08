@@ -3,68 +3,141 @@
 #include "irsens.h"
 #include "iomap.h"
 #include "lcd.h"
+#include "manager.h"
 
-#include "fixed/fix8.h"
+typedef enum { LEFT_EDGE, RIGHT_EDGE } edge_t;
+	
+static int8_t location = 0;
+static int8_t previous_value = 0;
+static uint8_t is_at_edge = 0;
+static edge_t last_edge_type = LEFT_EDGE;
+static uint8_t stuck_detection_enabled = 1;
+static uint8_t same_value_count = 0;
 
-static fix8_t avg2 = F8(127);
+static uint8_t get_bit_count(uint8_t value)
+{
+	uint8_t bit_count = 0;
+	
+	for (uint8_t i = 0; i <= 7; ++i)
+	{
+		if (value & BIT(i))
+			++bit_count;
+	}
+	
+	return bit_count;
+}
 
-static const fix8_t alpha2 = F8(0.1);
-static const fix8_t oneminusalpha2 = F8(0.9);
+static uint8_t get_right_bit_index(uint8_t value)
+{
+	for (uint8_t i = 0; i <= 7; ++i)
+	{
+		if (value & BIT(i))
+			return i;
+	}
+	
+	return 0;
+}
+
+static uint8_t get_left_bit_index(uint8_t value)
+{
+	for (uint8_t i = 7; i >= 0; --i)
+	{
+		if (value & BIT(i))
+			return i;
+	}
+	
+	return 0;
+}
 
 void irsens_init() {
-	IRSENS_DDR = 0;
+	IRSENS_DDR = 0x00; // port as input
+	IRSENS_PORT = 0x00; // no pull-ups
 }
 
-void irsens_update() {
-	uint8_t v = ~IRSENS_PIN;
-	uint8_t low = 255;
-	uint8_t high = 255;
-	int8_t i;
+void irsens_set_stuck_detection(uint8_t value)
+{
+	stuck_detection_enabled = value;
+}
 
-/*
-	lcd_printf(8, "IRSNS %c%c%c%c%c%c%c%c",
-		   v & BIT(7) ? 'X' : 'o',
-		   v & BIT(6) ? 'X' : 'o',
-		   v & BIT(5) ? 'X' : 'o',
-		   v & BIT(4) ? 'X' : 'o',
-		   v & BIT(3) ? 'X' : 'o',
-		   v & BIT(2) ? 'X' : 'o',
-		   v & BIT(1) ? 'X' : 'o',
-		   v & BIT(0) ? 'X' : 'o');
-*/
-	for (i = 0; i < 8; ++i) {
-		if (v & BIT(i)) {
-			high = i;
-			break;
+void irsens_update()
+{
+	static const int8_t mapping[8] = {-127, -91, -54, -18, 18, 54, 91, 127};
+	
+	uint8_t value = ~IRSENS_PIN;
+	
+	// detect if we are stuck somewhere and the sensor value never changes
+	if (stuck_detection_enabled && value == previous_value)
+	{
+		++same_value_count;
+		
+		// 5 s with 20 Hz
+		if (same_value_count > 100)
+		{
+			same_value_count = 0;
+			manager_set_state(STATE_RECOVER);
+			
+			return;
 		}
 	}
-
-	for (i = 7; i >= 0; --i) {
-		if (v & BIT(i)) {
-			low = i;
-			break;
-		}
-	}
-
-	if (low == 255 || high == 255) {
-		uint8_t val = fix8_to_int(avg2);
+	else
+		same_value_count = 0;
+		
+	previous_value = value;
+	
+	uint8_t bit_count = get_bit_count(value);
+	uint8_t left_bit_index = get_left_bit_index(value);
+	uint8_t right_bit_index = get_right_bit_index(value);
+	
+	// either out of track or tape between sensors, keep using the previous value
+	if (bit_count == 0)
+	{
 		return;
 	}
-
-	uint8_t mappedl = low * (255 / 7);
-	uint8_t mappedh = high * (255 / 7);
-	uint16_t mapped = ((uint16_t)(mappedl + mappedh)) / 2;
-
-	fix8_t xf = fix8_from_int(mapped);
-	avg2 = fix8_add(fix8_mul(alpha2, xf), fix8_mul(oneminusalpha2, avg2));
-	uint8_t val = fix8_to_int(avg2);
-
-	//lcd_printf(10, "B l %u h %u           ", low, high);
-	//lcd_printf(11, "M l %u h %u   ", mappedl, mappedh);
-	//lcd_printf(9,  "IRSNS %u    ", val);
+	// tape under single sensor
+	else if (bit_count == 1)
+	{
+		location = mapping[left_bit_index];
+		
+		// detect if we are at the extremes for later use
+		is_at_edge = (left_bit_index == 7 || right_bit_index == 0);
+		
+		// detect on which side of the sensor we are for later use
+		if (left_bit_index <= 3)
+			last_edge_type = RIGHT_EDGE;
+		else
+			last_edge_type = LEFT_EDGE;
+	}
+	// tape overlapping two sensors
+	else if (bit_count == 2)
+	{
+		int16_t left_value = mapping[left_bit_index];
+		int16_t right_value = mapping[right_bit_index];
+		
+		location = (int8_t)((left_value + right_value) / 2);
+	}
+	// car is completely misaligned
+	// get the rightmost or leftmost value, preferring the side which has a reading closer to the edge
+	else if (bit_count < 8) // skip the start line situation
+	{
+		if (7 - left_bit_index < right_bit_index)
+			location = mapping[left_bit_index];
+		else
+			location = mapping[right_bit_index];
+	}
 }
 
-uint8_t irsens_get_direction() {
-	return 255 - fix8_to_int(avg2);
+int8_t irsens_get_location() {
+	return location;
 }
 
+uint8_t irsens_is_at_start_line()
+{
+	uint8_t value = ~IRSENS_PIN;
+	
+	return (get_bit_count(value) > 6);
+}
+
+uint8_t irsens_is_at_edge()
+{
+	return is_at_edge;
+}
