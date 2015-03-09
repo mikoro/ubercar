@@ -23,9 +23,6 @@ void state_drive_init()
 	steering_set_direction(0);
 	steering_set_enabled(1);
 	
-	lcd_clear();
-	lcd_printf(0, 1, 3, 255, 255, 255, "DRIVE");
-	
 	pid_steering_reset();
 	pid_motor_reset();
 	
@@ -38,13 +35,15 @@ void state_drive_init()
 	pid_motor_set_kd(F8(0.0));
 	
 	irsens_set_stuck_detection(0);
+	
+	lcd_draw_header("DRIVE");
 }
 
 void state_drive_update_fixed()
 {
 	if (button_was_released())
 	{
-		manager_set_state(STATE_IDLE);
+		manager_set_state(STATE_MEASURE);
 		return;
 	}
 	

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 #include <avr/io.h>
 #include <util/delay.h>
 
@@ -285,5 +286,17 @@ uint8_t lcd_is_touched()
 	read_byte();
 	read_byte();
 	
-	return (response != 0);
+	return (response == 0x01);
+}
+
+void lcd_draw_header(const char* mode_str)
+{
+	size_t length = strlen(mode_str);
+	uint8_t odd = length % 2;
+	
+	lcd_clear();
+	lcd_draw_rectangle(0, 0, 240, 50, 31, 0, 0);
+	lcd_set_transparent_font(1);
+	lcd_printg(35, 10, 3, 0, 31, 63, 31, 2, 2, "ubercar");
+	lcd_printg(120 - (length / 2) * 25 - (odd ? 13 : 0), 70, 3, 0, 31, 63, 0, 2, 2, mode_str);
 }

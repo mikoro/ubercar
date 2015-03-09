@@ -21,10 +21,9 @@ void state_error_init()
 	steering_set_direction(0);
 	steering_set_enabled(1);
 	
-	lcd_clear();
-	lcd_printf(0, 1, 3, 255, 255, 255, "ERROR");
+	lcd_draw_header("ERROR");
 	
-	//_delay_ms(1000);
+	_delay_ms(1000);
 	
 	motor_set_enabled(1);
 	motor_set_direction(MOTOR_FORWARDS);

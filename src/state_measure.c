@@ -20,15 +20,14 @@ void state_measure_init()
 	steering_set_direction(0);
 	steering_set_enabled(1);
 	
-	lcd_clear();
-	lcd_printf(0, 1, 3, 255, 255, 255, "MEASURE");
+	lcd_draw_header("MEASURE");
 }
 
 void state_measure_update_fixed()
 {
 	if (button_was_released())
 	{
-		manager_set_state(STATE_IDLE);
+		manager_set_state(STATE_RECOVER);
 		return;
 	}
 }

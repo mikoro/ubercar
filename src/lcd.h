@@ -23,4 +23,6 @@ void lcd_draw_button(uint8_t state, uint16_t x, uint16_t y, uint8_t rb, uint8_t 
 void lcd_set_touch_region(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 uint8_t lcd_is_touched();
 
+void lcd_draw_header(const char* mode_str);
+
 #endif
