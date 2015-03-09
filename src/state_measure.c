@@ -24,7 +24,7 @@ void state_measure_init()
 	pid_steering_reset();
 	pid_motor_reset();
 	
-	irsens_set_stuck_detection(ENABLE_STUCK_DETECTION);
+	irsens_reset();
 	
 	lcd_draw_header("MEASURE");
 }

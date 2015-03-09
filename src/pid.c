@@ -63,14 +63,13 @@ void pid_motor_set_kd(fix8_t kd)
 	motor_kd = kd;
 }
 
-int8_t pid_steering_calculate(int8_t ref, int8_t meas)
+int8_t pid_steering_calculate(int8_t ref)
 {
 	int16_t temp_ref = (int16_t)ref;
-	int16_t temp_meas = (int16_t)meas;
+	int16_t temp_meas = (int16_t)fix8_to_int(steering_output);
 	
-	// e = r - f
+	// e = r - m
 	int16_t error = temp_ref - temp_meas;
-	error -= (int16_t)fix8_to_int(steering_output);
 	
 	if (error < -128)
 		error = -128;
@@ -96,10 +95,6 @@ int8_t pid_steering_calculate(int8_t ref, int8_t meas)
 	// u += Kd * D
 	control_value = fix8_add(control_value, fix8_mul(steering_kd, steering_derivate));
 	
-	LCD_PRINTF(4, "E: %d     ", fix8_to_int(clamped_error));
-	LCD_PRINTF(5, "S: %d     ", fix8_to_int(steering_output));
-	LCD_PRINTF(6, "C: %d     ", fix8_to_int(control_value));
-	
 	// o += u
 	steering_output = fix8_add(steering_output, control_value);
 	
@@ -111,7 +106,7 @@ uint8_t pid_motor_calculate(uint8_t ref, uint8_t meas)
 	int16_t temp_ref = (int16_t)ref;
 	int16_t temp_meas = (int16_t)meas;
 	
-	// e = r - f
+	// e = r - m
 	int16_t error = temp_ref - temp_meas;
 	
 	if (error < -128)

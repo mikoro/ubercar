@@ -1,6 +1,11 @@
 #ifndef CAR_SETUP_H
 #define CAR_SETUP_H
 
+//                       right edge                   left edge
+//#define IRSENS_MAPPING {127, 91, 54, 18, -18, -54, -91, -127}
+#define IRSENS_MAPPING   {127, 96, 64, 32, 0, -43, -86, -128}
+//#define IRSENS_MAPPING {127, 84, 42, 0, -32, -64, -96, -128}
+		
 #define ENABLE_STUCK_DETECTION 0
 #define STUCK_DURATION 5 // seconds (at 20 Hz)
 

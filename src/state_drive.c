@@ -12,8 +12,6 @@
 #include "pid.h"
 #include "setup.h"
 
-static int8_t irsens_location_ref = -18;
-static uint8_t tacho_speed_ref = NORMAL_SPEED;
 static uint8_t button_down_count = 0;
 
 void state_drive_init()
@@ -28,7 +26,7 @@ void state_drive_init()
 	pid_steering_reset();
 	pid_motor_reset();
 	
-	irsens_set_stuck_detection(ENABLE_STUCK_DETECTION);
+	irsens_reset();
 	
 	lcd_draw_header("DRIVE");
 }
@@ -58,13 +56,19 @@ void state_drive_update_fixed()
 	
 	irsens_update();
 	
+	if (ENABLE_STUCK_DETECTION && irsens_is_stuck())
+	{
+		manager_set_state(STATE_RECOVER);
+		return;
+	}
+	
 	int8_t irsens_location = irsens_get_location();
 	uint8_t tacho_speed = tacho_get_speed();
 	
-	//int8_t steering_direction = pid_steering_calculate(irsens_location_ref, irsens_location);
-	uint8_t motor_power = pid_motor_calculate(tacho_speed_ref, tacho_speed);
+	int8_t steering_direction = pid_steering_calculate(irsens_location);
+	uint8_t motor_power = pid_motor_calculate(NORMAL_SPEED, tacho_speed);
 	
-	steering_set_direction(irsens_location);
+	steering_set_direction(steering_direction);
 	motor_set_power(motor_power);
 }
 

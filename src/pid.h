@@ -12,10 +12,9 @@ void pid_steering_set_kp(fix8_t kp);
 void pid_steering_set_ki(fix8_t ki);
 void pid_steering_set_kd(fix8_t kd);
 
-// ref: wanted irsens location, -127 .. 127
-// meas: location value from ir sensor, -127 .. 127
+// ref: wanted steering direction, -127 .. 127
 // return: steering direction, -127 .. 127
-int8_t pid_steering_calculate(int8_t ref, int8_t meas);
+int8_t pid_steering_calculate(int8_t ref);
 
 void pid_motor_set_kp(fix8_t kp);
 void pid_motor_set_ki(fix8_t ki);

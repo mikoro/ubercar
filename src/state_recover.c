@@ -23,7 +23,7 @@ void state_recover_init()
 	pid_steering_reset();
 	pid_motor_reset();
 	
-	irsens_set_stuck_detection(0);
+	irsens_reset();
 	
 	lcd_draw_header("RECOVER");
 }
