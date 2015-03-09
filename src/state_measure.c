@@ -10,15 +10,21 @@
 #include "irsens.h"
 #include "measurer.h"
 #include "pid.h"
+#include "setup.h"
 
 void state_measure_init()
 {
 	motor_set_power(0);
-	motor_set_enabled(0);
+	motor_set_enabled(1);
 	motor_set_direction(MOTOR_FORWARDS);
 	
 	steering_set_direction(0);
 	steering_set_enabled(1);
+	
+	pid_steering_reset();
+	pid_motor_reset();
+	
+	irsens_set_stuck_detection(ENABLE_STUCK_DETECTION);
 	
 	lcd_draw_header("MEASURE");
 }

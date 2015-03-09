@@ -14,11 +14,16 @@
 void state_recover_init()
 {
 	motor_set_power(0);
-	motor_set_enabled(0);
+	motor_set_enabled(1);
 	motor_set_direction(MOTOR_FORWARDS);
 	
 	steering_set_direction(0);
 	steering_set_enabled(1);
+	
+	pid_steering_reset();
+	pid_motor_reset();
+	
+	irsens_set_stuck_detection(0);
 	
 	lcd_draw_header("RECOVER");
 }

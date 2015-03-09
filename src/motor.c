@@ -3,6 +3,7 @@
 #include "motor.h"
 #include "iomap.h"
 #include "lcd.h"
+#include "setup.h"
 
 void motor_init(void) {
 	// Enable output pin

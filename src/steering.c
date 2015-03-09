@@ -28,7 +28,6 @@ void steering_init(void) {
 }
 
 void steering_set_enabled(uint8_t en) {
-
 	if (en) {
 		STEER_TCCRA |= BIT(COM1A1) | BIT(COM1A0); // PWM on (inverted, i.e normally low)
 	} else {

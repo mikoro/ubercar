@@ -23,6 +23,16 @@ void state_error_init()
 	steering_set_enabled(1);
 	
 	lcd_draw_header("ERROR");
+	
+	uint8_t status = motor_get_status();
+	
+	switch (status)
+	{
+		case 1: LCD_PRINTF(5, "Half-bridge A error"); break;
+		case 2: LCD_PRINTF(5, "Half-bridge B error"); break;
+		case 3: LCD_PRINTF(5, "Half-bridge A & B error"); break;
+		default: LCD_PRINTF(5, "Unknown error"); break;
+	}
 }
 
 void state_error_update_fixed()
@@ -37,4 +47,3 @@ void state_error_update_fixed()
 void state_error_update_fast()
 {
 }
-

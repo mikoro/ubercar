@@ -1,16 +1,17 @@
 #include "pid.h"
 #include "lcd.h"
+#include "setup.h"
 
-static fix8_t steering_kp = F8(1.0);
-static fix8_t steering_ki = F8(0.0);
-static fix8_t steering_kd = F8(0.0);
+static fix8_t steering_kp = F8(STEERING_KP);
+static fix8_t steering_ki = F8(STEERING_KI);
+static fix8_t steering_kd = F8(STEERING_KD);
 static fix8_t steering_integral = F8(0.0);
 static fix8_t steering_previous_error = F8(0.0);
 static fix8_t steering_output = F8(0.0);
 
-static fix8_t motor_kp = F8(1.0);
-static fix8_t motor_ki = F8(0.0);
-static fix8_t motor_kd = F8(0.0);
+static fix8_t motor_kp = F8(MOTOR_KP);
+static fix8_t motor_ki = F8(MOTOR_KI);
+static fix8_t motor_kd = F8(MOTOR_KD);
 static fix8_t motor_integral = F8(0.0);
 static fix8_t motor_previous_error = F8(0.0);
 static fix8_t motor_output = F8(-128.0);
@@ -140,6 +141,7 @@ uint8_t pid_motor_calculate(uint8_t ref, uint8_t meas)
 	// o += u
 	motor_output = fix8_add(motor_output, control_value);
 	
+	// shift output to 0..255 range
 	int16_t output = (int16_t)fix8_to_int(motor_output);
 	return (uint8_t)(output + 128);
 }

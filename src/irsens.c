@@ -4,6 +4,7 @@
 #include "iomap.h"
 #include "lcd.h"
 #include "manager.h"
+#include "setup.h"
 
 typedef enum { LEFT_EDGE, RIGHT_EDGE } edge_t;
 	
@@ -11,7 +12,7 @@ static int8_t location = 0;
 static int8_t previous_value = 0;
 static uint8_t is_at_edge = 0;
 static edge_t last_edge_type = LEFT_EDGE;
-static uint8_t stuck_detection_enabled = 1;
+static uint8_t stuck_detection_enabled = ENABLE_STUCK_DETECTION;
 static uint8_t same_value_count = 0;
 
 static uint8_t get_bit_count(uint8_t value)
@@ -70,8 +71,7 @@ void irsens_update()
 	{
 		++same_value_count;
 		
-		// 5 s with 20 Hz
-		if (same_value_count > 100)
+		if (same_value_count > (STUCK_DURATION * 20))
 		{
 			same_value_count = 0;
 			manager_set_state(STATE_RECOVER);

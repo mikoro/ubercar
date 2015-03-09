@@ -22,10 +22,6 @@ void state_idle_init()
 	
 	lcd_draw_header("IDLE");
 	
-	//lcd_draw_rectangle(20, 110, 220, 170, 15, 32, 15);
-	//lcd_draw_rectangle(20, 180, 220, 240, 15, 32, 15);
-	//lcd_draw_rectangle(20, 250, 220, 310, 15, 32, 15);
-	
 	lcd_draw_button(1, 30, 120, 0, 0, 31, 3, 31, 63, 31, 2, 2, " DRIVE ");
 	lcd_draw_button(1, 30, 190, 0, 0, 31, 3, 31, 63, 31, 2, 2, "MEASURE");
 	lcd_draw_button(1, 30, 260, 0, 0, 31, 3, 31, 63, 31, 2, 2, "RECOVER");
@@ -62,4 +58,3 @@ void state_idle_update_fast()
 {
 
 }
-

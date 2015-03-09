@@ -37,6 +37,7 @@ static void send_str(const char *s) {
 		send_byte(*s);
 }
 
+/*
 static void usart_flush_rx()
 {
 	uint8_t temp;
@@ -44,6 +45,7 @@ static void usart_flush_rx()
 	while (LCD_UCSRA & BIT(RXC1))
 		temp = LCD_UDR;
 }
+*/
 
 static void check_ack()
 {

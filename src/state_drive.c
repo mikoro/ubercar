@@ -10,9 +10,10 @@
 #include "irsens.h"
 #include "measurer.h"
 #include "pid.h"
+#include "setup.h"
 
 static int8_t irsens_location_ref = -18;
-static uint8_t tacho_speed_ref = 3;
+static uint8_t tacho_speed_ref = NORMAL_SPEED;
 static uint8_t button_down_count = 0;
 
 void state_drive_init()
@@ -27,15 +28,7 @@ void state_drive_init()
 	pid_steering_reset();
 	pid_motor_reset();
 	
-	pid_steering_set_kp(F8(0.5));
-	pid_steering_set_ki(F8(0.0));
-	pid_steering_set_kd(F8(0.0));
-	
-	pid_motor_set_kp(F8(1.0));
-	pid_motor_set_ki(F8(0.0));
-	pid_motor_set_kd(F8(0.5));
-	
-	irsens_set_stuck_detection(0);
+	irsens_set_stuck_detection(ENABLE_STUCK_DETECTION);
 	
 	lcd_draw_header("DRIVE");
 }
@@ -50,9 +43,13 @@ void state_drive_update_fixed()
 	
 	if (button_is_down())
 	{
+		// 1 second
 		if (++button_down_count >= 20)
 		{
 			manager_set_state(STATE_IDLE);
+			button_ignore_next();
+			button_down_count = 0;
+			
 			return;
 		}
 	}
@@ -74,4 +71,3 @@ void state_drive_update_fixed()
 void state_drive_update_fast()
 {
 }
-
