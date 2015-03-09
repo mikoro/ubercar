@@ -27,7 +27,10 @@ void state_measure_init()
 void state_measure_update_fixed()
 {
 	if (button_was_released())
+	{
 		manager_set_state(STATE_IDLE);
+		return;
+	}
 }
 
 void state_measure_update_fast()

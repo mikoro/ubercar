@@ -5,6 +5,8 @@
 
 typedef enum { MOTOR_FORWARDS, MOTOR_BACKWARDS } motor_dir_t;
 
+#define MINIMUM_POWER 70
+
 void motor_init(void);
 void motor_set_enabled(uint8_t en);
 void motor_set_direction(motor_dir_t dir);

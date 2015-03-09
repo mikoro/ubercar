@@ -22,10 +22,9 @@ void state_error_init()
 	steering_set_enabled(1);
 	
 	lcd_clear();
-	lcd_set_bg_color(255, 0, 0);
 	lcd_printf(0, 1, 3, 255, 255, 255, "ERROR");
 	
-	_delay_ms(1000);
+	//_delay_ms(1000);
 	
 	motor_set_enabled(1);
 	motor_set_direction(MOTOR_FORWARDS);
@@ -33,8 +32,14 @@ void state_error_init()
 
 void state_error_update_fixed()
 {
+	if (button_was_released())
+	{
+		manager_set_state(STATE_IDLE);
+		return;
+	}
 }
 
 void state_error_update_fast()
 {
 }
+

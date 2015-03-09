@@ -53,7 +53,7 @@ void manager_set_state(state_t new_state)
 	state_procs[current_state].init_proc();
 }
 
-#define PRINT_DEBUG
+//#define PRINT_DEBUG
 static void print_debug_values()
 {
 	lcd_printf(0, 1, 3, 255, 255, 255, "print stuff");
@@ -70,7 +70,7 @@ void manager_run()
 		if (motor_get_status() != 0x00 && current_state != STATE_ERROR)
 			manager_set_state(STATE_ERROR);
 		
-		if (++led_toggle_counter % 4 == 0)
+		if (++led_toggle_counter % 10 == 0)
 			led_toggle0();
 			
 		#ifdef PRINT_DEBUG

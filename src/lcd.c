@@ -36,7 +36,6 @@ static void send_str(const char *s) {
 		send_byte(*s);
 }
 
-/*
 static void usart_flush_rx()
 {
 	uint8_t temp;
@@ -44,7 +43,6 @@ static void usart_flush_rx()
 	while (LCD_UCSRA & BIT(RXC1))
 		temp = LCD_UDR;
 }
-*/
 
 static void check_ack()
 {
@@ -94,7 +92,8 @@ void lcd_init() {
 	LCD_UBRRH = (uint8_t)(BAUDRATE2 >> 8);
 	LCD_UBRRL = (uint8_t)BAUDRATE2;
 
-	check_ack();
+	_delay_ms(100);
+	usart_flush_rx();
 	*/
 	
 	// back light on
@@ -119,8 +118,6 @@ void lcd_init() {
 	send_byte(0x4f);
 	send_byte(0x01);
 	check_ack();
-	
-	lcd_clear();
 }
 
 void lcd_clear()

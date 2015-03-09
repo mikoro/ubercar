@@ -40,7 +40,7 @@ static uint8_t get_right_bit_index(uint8_t value)
 
 static uint8_t get_left_bit_index(uint8_t value)
 {
-	for (uint8_t i = 7; i >= 0; --i)
+	for (int8_t i = 7; i >= 0; --i)
 	{
 		if (value & BIT(i))
 			return i;
@@ -61,7 +61,7 @@ void irsens_set_stuck_detection(uint8_t value)
 
 void irsens_update()
 {
-	static const int8_t mapping[8] = {-127, -91, -54, -18, 18, 54, 91, 127};
+	static const int8_t mapping[8] = {127, 91, 54, 18, -18, -54, -91, -127};
 	
 	uint8_t value = ~IRSENS_PIN;
 	
@@ -117,7 +117,7 @@ void irsens_update()
 	}
 	// car is completely misaligned
 	// get the rightmost or leftmost value, preferring the side which has a reading closer to the edge
-	else if (bit_count < 8) // skip the start line situation
+	else if (bit_count <= 4) // skip the start line situation
 	{
 		if (7 - left_bit_index < right_bit_index)
 			location = mapping[left_bit_index];
@@ -134,7 +134,7 @@ uint8_t irsens_is_at_start_line()
 {
 	uint8_t value = ~IRSENS_PIN;
 	
-	return (get_bit_count(value) > 6);
+	return (get_bit_count(value) >= 6);
 }
 
 uint8_t irsens_is_at_edge()

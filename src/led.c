@@ -41,12 +41,12 @@ void led_toggle1()
 void led_error_loop()
 {
 	led_set0(0);
-	led_set1(0);
+	//led_set1(0);
 	
 	for (;;)
 	{
 		led_toggle0();
-		led_toggle1();
+		//led_toggle1();
 		_delay_ms(500);
 	}
 }

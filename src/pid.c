@@ -1,15 +1,16 @@
 #include "pid.h"
+#include "lcd.h"
 
 static fix8_t steering_kp = F8(1.0);
-static fix8_t steering_ki = F8(1.0);
-static fix8_t steering_kd = F8(1.0);
+static fix8_t steering_ki = F8(0.0);
+static fix8_t steering_kd = F8(0.0);
 static fix8_t steering_integral = F8(0.0);
 static fix8_t steering_previous_error = F8(0.0);
 static fix8_t steering_output = F8(0.0);
 
 static fix8_t motor_kp = F8(1.0);
-static fix8_t motor_ki = F8(1.0);
-static fix8_t motor_kd = F8(1.0);
+static fix8_t motor_ki = F8(0.0);
+static fix8_t motor_kd = F8(0.0);
 static fix8_t motor_integral = F8(0.0);
 static fix8_t motor_previous_error = F8(0.0);
 static fix8_t motor_output = F8(-128.0);
@@ -68,6 +69,7 @@ int8_t pid_steering_calculate(int8_t ref, int8_t meas)
 	
 	// e = r - f
 	int16_t error = temp_ref - temp_meas;
+	error -= (int16_t)fix8_to_int(steering_output);
 	
 	if (error < -128)
 		error = -128;
@@ -92,6 +94,10 @@ int8_t pid_steering_calculate(int8_t ref, int8_t meas)
 	
 	// u += Kd * D
 	control_value = fix8_add(control_value, fix8_mul(steering_kd, steering_derivate));
+	
+	LCD_PRINTF(4, "E: %d     ", fix8_to_int(clamped_error));
+	LCD_PRINTF(5, "S: %d     ", fix8_to_int(steering_output));
+	LCD_PRINTF(6, "C: %d     ", fix8_to_int(control_value));
 	
 	// o += u
 	steering_output = fix8_add(steering_output, control_value);

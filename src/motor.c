@@ -56,14 +56,15 @@ void motor_set_direction(motor_dir_t dir)
 
 // Input range 0 .. 255
 // Actual full duty cycle range is 0 .. 800
-// 1/3 power is 267, so this should never go too high
 void motor_set_power(uint8_t power)
 {
-	MOTORPWM_OCRA = power;
+	uint16_t adjusted_power = (uint16_t)power + MINIMUM_POWER;
 	
-	// sanity check anyway
-	if (MOTORPWM_OCRA > 267)
-		MOTORPWM_OCRA = 267;
+	// limit to 1/3 of full power
+	if (adjusted_power > 267)
+		adjusted_power = 267;
+		
+	MOTORPWM_OCRA = adjusted_power;
 }
 
 // Returns 0 if everything is ok
