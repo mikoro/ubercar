@@ -12,7 +12,8 @@
 #include "pid.h"
 
 static int8_t irsens_location_ref = -18;
-static uint8_t tacho_speed_ref = 2;
+static uint8_t tacho_speed_ref = 3;
+static uint8_t button_down_count = 0;
 
 void state_drive_init()
 {
@@ -30,9 +31,9 @@ void state_drive_init()
 	pid_steering_set_ki(F8(0.0));
 	pid_steering_set_kd(F8(0.0));
 	
-	pid_motor_set_kp(F8(5.0));
+	pid_motor_set_kp(F8(1.0));
 	pid_motor_set_ki(F8(0.0));
-	pid_motor_set_kd(F8(0.0));
+	pid_motor_set_kd(F8(0.5));
 	
 	irsens_set_stuck_detection(0);
 	
@@ -46,6 +47,17 @@ void state_drive_update_fixed()
 		manager_set_state(STATE_MEASURE);
 		return;
 	}
+	
+	if (button_is_down())
+	{
+		if (++button_down_count >= 20)
+		{
+			manager_set_state(STATE_IDLE);
+			return;
+		}
+	}
+	else
+		button_down_count = 0;
 	
 	irsens_update();
 	

@@ -17,16 +17,12 @@ void state_error_init()
 {
 	motor_set_power(0);
 	motor_set_enabled(0);
+	motor_set_direction(MOTOR_FORWARDS);
 	
 	steering_set_direction(0);
 	steering_set_enabled(1);
 	
 	lcd_draw_header("ERROR");
-	
-	_delay_ms(1000);
-	
-	motor_set_enabled(1);
-	motor_set_direction(MOTOR_FORWARDS);
 }
 
 void state_error_update_fixed()
