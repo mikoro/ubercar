@@ -16,9 +16,6 @@ static fix8_t motor_integral = F8(0.0);
 static fix8_t motor_previous_error = F8(0.0);
 static fix8_t motor_output = F8(-128.0);
 
-static fix8_t time_step = F8(TIME_STEP);
-static fix8_t one_over_time_step = F8(ONE_OVER_TIME_STEP);
-
 void pid_steering_reset()
 {
 	steering_integral = F8(0.0);
@@ -80,10 +77,10 @@ int8_t pid_steering_calculate(int8_t ref)
 	fix8_t clamped_error = fix8_from_int((int8_t)error);
 	
 	// I = I + e * dt
-	steering_integral = fix8_add(steering_integral, fix8_mul(clamped_error, time_step));
+	steering_integral = fix8_add(steering_integral, fix8_mul(clamped_error, F8(TIME_STEP)));
 	
 	// D = (e - pe) / dt
-	fix8_t steering_derivate = fix8_mul(fix8_sub(clamped_error, steering_previous_error), one_over_time_step);
+	fix8_t steering_derivate = fix8_mul(fix8_sub(clamped_error, steering_previous_error), F8(ONE_OVER_TIME_STEP));
 	steering_previous_error = clamped_error;
 	
 	// u = Kp * e
@@ -118,10 +115,10 @@ uint8_t pid_motor_calculate(uint8_t ref, uint8_t meas)
 	fix8_t clamped_error = fix8_from_int((int8_t)error);
 	
 	// I = I + e * dt
-	motor_integral = fix8_add(motor_integral, fix8_mul(clamped_error, time_step));
+	motor_integral = fix8_add(motor_integral, fix8_mul(clamped_error, F8(TIME_STEP)));
 	
 	// D = (e - pe) / dt
-	fix8_t motor_derivate = fix8_mul(fix8_sub(clamped_error, motor_previous_error), one_over_time_step);
+	fix8_t motor_derivate = fix8_mul(fix8_sub(clamped_error, motor_previous_error), F8(ONE_OVER_TIME_STEP));
 	motor_previous_error = clamped_error;
 	
 	// u = Kp * e
