@@ -16,8 +16,8 @@ static fix8_t motor_integral = F8(0.0);
 static fix8_t motor_previous_error = F8(0.0);
 static fix8_t motor_output = F8(-128.0);
 
-static fix8_t time_step = F8(0.05); // 20 Hz 50 ms
-static fix8_t one_over_time_step = F8(20);
+static fix8_t time_step = F8(TIME_STEP);
+static fix8_t one_over_time_step = F8(ONE_OVER_TIME_STEP);
 
 void pid_steering_reset()
 {

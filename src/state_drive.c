@@ -12,8 +12,6 @@
 #include "pid.h"
 #include "setup.h"
 
-static uint8_t button_down_count = 0;
-
 void state_drive_init()
 {
 	motor_set_power(0);
@@ -39,23 +37,6 @@ void state_drive_update_fixed()
 		return;
 	}
 	
-	if (button_is_down())
-	{
-		// 1 second
-		if (++button_down_count >= 20)
-		{
-			manager_set_state(STATE_IDLE);
-			button_ignore_next();
-			button_down_count = 0;
-			
-			return;
-		}
-	}
-	else
-		button_down_count = 0;
-	
-	irsens_update();
-	
 	if (ENABLE_STUCK_DETECTION && irsens_is_stuck())
 	{
 		manager_set_state(STATE_RECOVER);
@@ -74,4 +55,5 @@ void state_drive_update_fixed()
 
 void state_drive_update_fast()
 {
+	irsens_update();
 }

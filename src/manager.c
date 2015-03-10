@@ -10,6 +10,7 @@
 #include "steering.h"
 #include "tacho.h"
 #include "irsens.h"
+#include "setup.h"
 
 typedef void (*state_proc_t)(void);
 
@@ -30,6 +31,7 @@ static state_info_t const state_procs[NUM_STATES] = {
 static state_t current_state = STATE_IDLE;
 static volatile uint8_t ms_elapsed = 0;
 static uint8_t led_toggle_counter = 0;
+static uint8_t button_down_count = 0;
 
 ISR(STATEMANREF_COMPA_vect)
 {
@@ -63,13 +65,26 @@ void manager_run()
 		
 		if (motor_get_status() != 0x00 && current_state != STATE_ERROR)
 			manager_set_state(STATE_ERROR);
+			
+		if (button_is_down())
+		{
+			// 1 second
+			if (++button_down_count >= 20)
+			{
+				manager_set_state(STATE_IDLE);
+				button_ignore_next();
+				button_down_count = 0;
+			}
+		}
+		else
+			button_down_count = 0;
 		
 		// blink the other led at 1 Hz
-		if (++led_toggle_counter % 10 == 0)
+		if (++led_toggle_counter % (ONE_OVER_TIME_STEP / 2) == 0)
 			led_toggle0();
 		
-		// lock the fixed loop to 20 Hz
-		while (ms_elapsed < 50)
+		// lock the fixed loop to some Hz
+		while (ms_elapsed < TIME_STEP_MS)
 		{
 			// while waiting, do non-fixed-time updates
 			state_procs[current_state].update_fast_proc();
@@ -78,3 +93,4 @@ void manager_run()
 		ms_elapsed = 0;
 	}
 }
+
