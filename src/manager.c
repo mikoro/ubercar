@@ -1,4 +1,5 @@
 #include <avr/interrupt.h>
+#include <util/atomic.h>
 
 #include "manager.h"
 #include "states.h"
@@ -29,13 +30,16 @@ static state_info_t const state_procs[NUM_STATES] = {
 };
 
 static state_t current_state = STATE_IDLE;
-static volatile uint8_t ms_elapsed = 0;
+static volatile uint8_t ms_elapsed_loop = 0;
+static volatile uint16_t ms_elapsed_timer = 0;
 static uint8_t led_toggle_counter = 0;
 static uint8_t button_down_count = 0;
 
 ISR(STATEMANREF_COMPA_vect)
 {
-	++ms_elapsed;
+	++ms_elapsed_loop;
+	++ms_elapsed_timer;
+	
 	STATEMANREF_TCNT = 0;
 }
 
@@ -84,13 +88,33 @@ void manager_run()
 			led_toggle0();
 		
 		// lock the fixed loop to some Hz
-		while (ms_elapsed < TIME_STEP_MS)
+		// no atomic block (one byte read)
+		while (ms_elapsed_loop < TIME_STEP_MS)
 		{
 			// while waiting, do non-fixed-time updates
 			state_procs[current_state].update_fast_proc();
 		}
 		
-		ms_elapsed = 0;
+		ms_elapsed_loop = 0;
 	}
 }
 
+void manager_reset_timer()
+{
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+	{
+		ms_elapsed_timer = 0;
+	}
+}
+
+uint16_t manager_get_elapsed_time()
+{
+	uint16_t elapsed_time;
+	
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+	{
+		elapsed_time = ms_elapsed_timer;
+	}
+	
+	return elapsed_time;
+}

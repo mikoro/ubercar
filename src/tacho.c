@@ -56,10 +56,20 @@ uint8_t tacho_get_speed()
 
 uint16_t tacho_get_distance()
 {
-	return distance;
+	uint16_t temp_distance;
+	
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+	{
+		temp_distance = distance;
+	}
+	
+	return temp_distance;
 }
 
 void tacho_reset_distance()
 {
-	distance = 0;
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+	{
+		distance = 0;
+	}
 }
