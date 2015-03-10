@@ -21,35 +21,16 @@ void state_idle_init()
 	steering_set_enabled(1);
 	
 	lcd_draw_header("IDLE");
+	lcd_set_touch_region(0, 0, 240, 320);
 	
-	lcd_draw_button(1, 30, 120, 0, 0, 31, 3, 31, 63, 31, 2, 2, " DRIVE ");
-	lcd_draw_button(1, 30, 190, 0, 0, 31, 3, 31, 63, 31, 2, 2, "MEASURE");
-	lcd_draw_button(1, 30, 260, 0, 0, 31, 3, 31, 63, 31, 2, 2, "RECOVER");
+	lcd_draw_button(1, 30, 190, 0, 0, 31, 3, 31, 63, 31, 2, 2, " DRIVE ");
 }
 
 void state_idle_update_fixed()
 {
-	lcd_set_touch_region(20, 110, 220, 170);
-	
 	if (button_was_released() || lcd_is_touched())
 	{
 		manager_set_state(STATE_DRIVE);
-		return;
-	}
-	
-	lcd_set_touch_region(20, 180, 220, 240);
-	
-	if (lcd_is_touched())
-	{
-		manager_set_state(STATE_MEASURE);
-		return;
-	}
-	
-	lcd_set_touch_region(20, 250, 220, 310);
-	
-	if (lcd_is_touched())
-	{
-		manager_set_state(STATE_RECOVER);
 		return;
 	}
 }

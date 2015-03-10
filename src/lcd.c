@@ -288,7 +288,7 @@ uint8_t lcd_is_touched()
 	read_byte();
 	read_byte();
 	
-	return (response == 0x01);
+	return (response != 0);
 }
 
 void lcd_draw_header(const char* mode_str)
