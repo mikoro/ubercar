@@ -70,10 +70,10 @@ void manager_run()
 		if (motor_get_status() != 0x00 && current_state != STATE_ERROR)
 			manager_set_state(STATE_ERROR);
 			
-		if (button_is_down())
+		if (button_is_down() && current_state != STATE_IDLE)
 		{
 			// 1 second
-			if (++button_down_count >= 20)
+			if (++button_down_count >= ONE_OVER_TIME_STEP)
 			{
 				manager_set_state(STATE_IDLE);
 				button_ignore_next();
