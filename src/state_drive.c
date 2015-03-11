@@ -37,6 +37,8 @@ void state_drive_update_fixed()
 		return;
 	}
 	
+	irsens_update();
+	
 	if (ENABLE_STUCK_DETECTION && irsens_is_stuck())
 	{
 		manager_set_state(STATE_RECOVER);
@@ -55,5 +57,5 @@ void state_drive_update_fixed()
 
 void state_drive_update_fast()
 {
-	irsens_update();
+	irsens_read_sensor();
 }

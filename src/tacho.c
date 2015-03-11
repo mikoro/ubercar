@@ -4,6 +4,7 @@
 
 #include "tacho.h"
 #include "iomap.h"
+#include "setup.h"
 
 static volatile uint16_t distance = 0;
 static volatile uint16_t values[TACHO_AVG_AMOUNT] = {0};

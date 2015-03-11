@@ -3,15 +3,18 @@
 
 #include <stdint.h>
 
-typedef enum { LEFT_EDGE, RIGHT_EDGE } edge_t;
+typedef enum { LEFT, RIGHT, NONE } side_t;
 
 void irsens_init();
-void irsens_update();
 void irsens_reset();
-uint8_t irsens_is_stuck();
+void irsens_read_sensor();
+void irsens_update();
 int8_t irsens_get_location();
+uint8_t irsens_get_relative_location();
 uint8_t irsens_is_at_start_line();
+void irsens_reset_is_at_start_line();
 uint8_t irsens_is_at_edge();
-edge_t irsens_get_last_edge();
+uint8_t irsens_is_stuck();
+side_t irsens_get_last_edge();
 
 #endif

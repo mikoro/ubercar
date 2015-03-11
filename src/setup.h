@@ -9,13 +9,14 @@
 #define TACHO_UPDATE_FREQ 20 // Hz
 #define TACHO_AVG_AMOUNT 5
 
-//                       right edge                   left edge
-//#define IRSENS_MAPPING {127, 91, 54, 18, -18, -54, -91, -127}
-#define IRSENS_MAPPING   {127, 96, 64, 32, 0, -43, -86, -128}
-//#define IRSENS_MAPPING {127, 84, 42, 0, -32, -64, -96, -128}
-		
+//                          right edge                  left edge
+#define IRSENS_LOCATION_MAP {127, 91, 54, 18, -18, -54, -91, -127}
+//#define IRSENS_LOCATION_MAP {127, 96, 64, 32, 0, -43, -86, -128}
+//#define IRSENS_LOCATION_MAP {127, 84, 42, 0, -32, -64, -96, -128}
+#define IRSENS_RELATIVE_LOCATION_MAP {3, 2, 1, 0, 0, 1, 2, 3}
+
 #define ENABLE_STUCK_DETECTION 0
-#define STUCK_DURATION 4 // seconds (at 20 Hz)
+#define STUCK_DURATION 4 // seconds
 
 ////////////////////////
 // Car 1
