@@ -301,4 +301,6 @@ void lcd_draw_header(const char* mode_str)
 	lcd_set_transparent_font(1);
 	lcd_printg(35, 10, 3, 0, 31, 63, 31, 2, 2, "ubercar");
 	lcd_printg(120 - (length / 2) * 25 - (odd ? 13 : 0), 70, 3, 0, 31, 63, 0, 2, 2, mode_str);
+	lcd_set_transparent_font(0);
 }
+

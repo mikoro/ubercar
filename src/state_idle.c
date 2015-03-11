@@ -13,17 +13,17 @@
 
 void state_idle_init()
 {
-	motor_set_power(0);
-	motor_set_enabled(0);
+	motor_set_power(255);
+	motor_set_enabled(1);
 	motor_set_direction(MOTOR_FORWARDS);
 	
 	steering_set_direction(0);
 	steering_set_enabled(1);
 	
 	lcd_draw_header("IDLE");
-	lcd_set_touch_region(0, 0, 240, 320);
 	
 	lcd_draw_button(1, 30, 190, 0, 0, 31, 3, 31, 63, 31, 2, 2, " DRIVE ");
+	lcd_set_touch_region(0, 0, 240, 320);
 }
 
 void state_idle_update_fixed()
@@ -33,9 +33,13 @@ void state_idle_update_fixed()
 		manager_set_state(STATE_DRIVE);
 		return;
 	}
+	
+	LCD_PRINTF(4, "S: %u   ", tacho_get_speed());
+	LCD_PRINTF(5, "D: %u   ", tacho_get_distance());
 }
 
 void state_idle_update_fast()
 {
 
 }
+

@@ -18,10 +18,10 @@
 // Car 1
 ////////////////////////
 ///*
-#define MINIMUM_POWER 70
-#define NORMAL_SPEED 5
+#define MINIMUM_POWER 80
+#define NORMAL_SPEED 20
 #define FAST_SPEED 5
-#define MOTOR_KP 2.0
+#define MOTOR_KP 0.5
 #define MOTOR_KI 0.0
 #define MOTOR_KD 0.0
 #define STEERING_KP 1.0
