@@ -6,6 +6,9 @@
 #define TIME_STEP_MS 50 // milliseconds
 #define ONE_OVER_TIME_STEP 20 // Hz
 
+#define TACHO_UPDATE_FREQ 20 // Hz
+#define TACHO_AVG_AMOUNT 5
+
 //                       right edge                   left edge
 //#define IRSENS_MAPPING {127, 91, 54, 18, -18, -54, -91, -127}
 #define IRSENS_MAPPING   {127, 96, 64, 32, 0, -43, -86, -128}

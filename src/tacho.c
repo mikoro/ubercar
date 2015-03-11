@@ -5,10 +5,8 @@
 #include "tacho.h"
 #include "iomap.h"
 
-#define AVG_AMOUNT 3
-
 static volatile uint16_t distance = 0;
-static volatile uint16_t values[AVG_AMOUNT] = {0};
+static volatile uint16_t values[TACHO_AVG_AMOUNT] = {0};
 static volatile uint8_t value_index = 0;
 
 void tacho_init()
@@ -24,16 +22,16 @@ void tacho_init()
 	
 	// Interrupt reference
 	TACHOREF_TCCRB = BIT(WGM32); // CTC mode
-	TACHOREF_TCCRB |= BIT(CS31) | BIT(CS30); // divide by 64
+	TACHOREF_TCCRB |= BIT(CS32); // divide by 256
 	TACHOREF_TIMSK = BIT(OCIE3A); // enable compare interrupt
-	TACHOREF_OCRA = 12500; // 50 ms 20 Hz
+	TACHOREF_OCRA = 62500 / TACHO_UPDATE_FREQ; // 62500 is one second
 	TACHOREF_TCNT = 0;
 }
 
 ISR(TACHOREF_COMPA_vect)
 {
 	uint16_t tachos = TACHO_TCNT;
-	values[++value_index % AVG_AMOUNT] = tachos;
+	values[++value_index % TACHO_AVG_AMOUNT] = tachos;
 	distance += tachos;
 	
 	TACHO_TCNT = 0;
@@ -46,7 +44,7 @@ uint8_t tacho_get_speed()
 		
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	{
-		for (uint8_t i = 0; i < AVG_AMOUNT; ++i)
+		for (uint8_t i = 0; i < TACHO_AVG_AMOUNT; ++i)
 			speed_sum += values[i];
 	}
 	
@@ -75,4 +73,3 @@ void tacho_reset_distance()
 		distance = 0;
 	}
 }
-
