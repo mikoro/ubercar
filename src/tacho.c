@@ -67,6 +67,23 @@ uint16_t tacho_get_distance()
 	return temp_distance;
 }
 
+uint16_t tacho_get_distance_m()
+{
+	// 73 mm per one tacho reading
+	// 1 m = 1000 mm has 1000/73 = 13.7 tachos
+	// estimate with with divider = 14
+	// TODO needs f16.16 for better accuracy
+	
+	uint16_t temp_distance;
+	
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+	{
+		temp_distance = distance;
+	}
+	
+	return temp_distance / 14;
+}
+
 void tacho_reset_distance()
 {
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)

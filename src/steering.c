@@ -40,7 +40,7 @@ void steering_set_enabled(uint8_t en) {
 
 // Input in range -127 .. 127, 0 is neutral, -127 is left
 void steering_set_direction(int8_t dir) {
-	// Mapping is not perfect, factor should be 39.216
+	// exact factor is 39.216 (do not change, steering angle sines have been calculated with this)
 	STEER_OCRA = 40000 + 39 * dir;
 }
 
