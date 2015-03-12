@@ -73,7 +73,7 @@ void manager_run()
 		if (button_is_down() && current_state != STATE_IDLE)
 		{
 			// 1 second
-			if (++button_down_count >= ONE_OVER_TIME_STEP)
+			if (++button_down_count >= CONTROL_FREQ)
 			{
 				manager_set_state(STATE_IDLE);
 				button_ignore_next();
@@ -84,7 +84,7 @@ void manager_run()
 			button_down_count = 0;
 		
 		// blink the other led at 1 Hz
-		if (++led_toggle_counter % (ONE_OVER_TIME_STEP / 2) == 0)
+		if (++led_toggle_counter % (CONTROL_FREQ / 2) == 0)
 			led_toggle0();
 		
 		// lock the fixed loop to some Hz

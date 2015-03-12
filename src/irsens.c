@@ -99,7 +99,7 @@ void irsens_update()
 	{
 		++same_value_count;
 		
-		if (same_value_count > (STUCK_DURATION * ONE_OVER_TIME_STEP))
+		if (same_value_count > (STUCK_DURATION * CONTROL_FREQ))
 		{
 			same_value_count = 0;
 			is_stuck = 1;

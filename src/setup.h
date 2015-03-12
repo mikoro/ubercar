@@ -1,13 +1,14 @@
 #ifndef CAR_SETUP_H
 #define CAR_SETUP_H
 
-// control loop frequency 20 Hz
-#define TIME_STEP 0.05 // seconds
-#define TIME_STEP_MS 50 // milliseconds
-#define ONE_OVER_TIME_STEP 20 // Hz
+// control loop frequency
+#define CONTROL_FREQ 20 // Hz
+#define TIME_STEP (1.0 / CONTROL_FREQ) // seconds
+#define TIME_STEP_MS (TIME_STEP * 1000.0) // milliseconds
+#define ONE_OVER_TIME_STEP (1.0 / TIME_STEP) // should be same as control freq
 
 #define TACHO_UPDATE_FREQ 20 // Hz
-#define TACHO_AVG_AMOUNT 5
+#define TACHO_AVG_AMOUNT 5 // taps
 
 //                          right edge                  left edge
 #define IRSENS_LOCATION_MAP {127, 91, 54, 18, -18, -54, -91, -127}
