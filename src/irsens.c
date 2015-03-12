@@ -83,13 +83,10 @@ void irsens_reset()
 
 void irsens_read_sensor()
 {
-	uint8_t new_sensor_value = ~IRSENS_PIN;
+	sensor_value = ~IRSENS_PIN;
 	
 	if (new_sensor_value != 0)
-	{
-		sensor_value = new_sensor_value;
 		is_at_start_line = (get_bit_count(sensor_value) >= 6);
-	}
 }
 
 void irsens_update()
@@ -99,7 +96,7 @@ void irsens_update()
 	{
 		++same_value_count;
 		
-		if (same_value_count > (STUCK_DURATION * CONTROL_FREQ))
+		if (same_value_count > (IRSENS_STUCK_DURATION * CONTROL_FREQ))
 		{
 			same_value_count = 0;
 			is_stuck = 1;

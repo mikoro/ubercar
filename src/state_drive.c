@@ -25,8 +25,7 @@ void state_drive_init()
 	pid_motor_reset();
 	
 	irsens_reset();
-	
-	tacho_reset_distance();
+	tacho_reset();
 	
 	lcd_draw_header("DRIVE");
 }
@@ -40,8 +39,9 @@ void state_drive_update_fixed()
 	}
 	
 	irsens_update();
+	tacho_update();
 	
-	if (ENABLE_STUCK_DETECTION && irsens_is_stuck())
+	if ((IRSENS_ENABLE_STUCK_DETECTION && irsens_is_stuck()) || (TACHO_ENABLE_STOP_DETECTION && tacho_has_stopped()))
 	{
 		manager_set_state(STATE_RECOVER);
 		return;
@@ -51,9 +51,7 @@ void state_drive_update_fixed()
 	uint8_t tacho_speed = tacho_get_speed();
 	
 	int8_t steering_direction = pid_steering_calculate(irsens_location);
-	uint8_t motor_power = pid_motor_calculate(NORMAL_SPEED, tacho_speed);
-	
-	fix8_t mysin = steering_get_sine(steering_direction);
+	uint8_t motor_power = pid_motor_calculate(TARGET_SPEED, tacho_speed);
 	
 	steering_set_direction(steering_direction);
 	motor_set_power(motor_power);
