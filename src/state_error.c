@@ -28,10 +28,10 @@ void state_error_init()
 	
 	switch (status)
 	{
-		case 1: LCD_PRINTF(5, "Half-bridge A error"); break;
-		case 2: LCD_PRINTF(5, "Half-bridge B error"); break;
-		case 3: LCD_PRINTF(5, "Half-bridge A & B error"); break;
-		default: LCD_PRINTF(5, "Unknown error"); break;
+		case 1: LCD_PRINTF(7, "Half-bridge A error"); break;
+		case 2: LCD_PRINTF(7, "Half-bridge B error"); break;
+		case 3: LCD_PRINTF(7, "Half-bridge A & B error"); break;
+		default: LCD_PRINTF(7, "Unknown error"); break;
 	}
 }
 
