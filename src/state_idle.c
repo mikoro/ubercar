@@ -11,8 +11,6 @@
 #include "measurer.h"
 #include "pid.h"
 
-int8_t angle = 0;
-
 void state_idle_init()
 {
 	motor_set_power(0);
@@ -35,16 +33,9 @@ void state_idle_update_fixed()
 {
 	if (button_was_released() || lcd_is_touched())
 	{
-		//manager_set_state(STATE_DRIVE);
-		//return;
-		
-		angle -= 10;
+		manager_set_state(STATE_DRIVE);
+		return;
 	}
-	
-	steering_set_direction(angle);
-	
-	LCD_PRINTF(7, "A: %d ", angle);
-	LCD_PRINTF(8, "D: %u ", tacho_get_distance());
 }
 
 void state_idle_update_fast()
