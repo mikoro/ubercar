@@ -26,6 +26,8 @@ void state_drive_init()
 	
 	irsens_reset();
 	
+	tacho_reset_distance();
+	
 	lcd_draw_header("DRIVE");
 }
 
@@ -50,6 +52,8 @@ void state_drive_update_fixed()
 	
 	int8_t steering_direction = pid_steering_calculate(irsens_location);
 	uint8_t motor_power = pid_motor_calculate(NORMAL_SPEED, tacho_speed);
+	
+	fix8_t mysin = steering_get_sine(steering_direction);
 	
 	steering_set_direction(steering_direction);
 	motor_set_power(motor_power);
