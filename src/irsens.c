@@ -122,7 +122,7 @@ void irsens_update()
 	
 	// used to eliminate the start line "jumping"
 	// TODO needs a counter to reset after x ms
-	if (abs(bit_index_diff) > 1)
+	if (abs(bit_index_diff) > 2)
 		return;
 		
 	previous_bit_index = bit_index;

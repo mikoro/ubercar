@@ -24,7 +24,9 @@ void state_idle_init()
 	
 	lcd_draw_header("IDLE");
 	
+	lcd_set_transparent_font(1);
 	lcd_draw_button(1, 30, 190, 0, 0, 31, 3, 31, 63, 31, 2, 2, " DRIVE ");
+	lcd_set_transparent_font(0);
 }
 
 void state_idle_update_fixed()
@@ -35,8 +37,8 @@ void state_idle_update_fixed()
 		return;
 	}
 	
-	//LCD_PRINTF(4, "S: %u   ", tacho_get_speed());
-	//LCD_PRINTF(5, "D: %u   ", tacho_get_distance());
+	LCD_PRINTF(7, "S: %u ", tacho_get_speed());
+	LCD_PRINTF(8, "D: %u ", tacho_get_distance());
 }
 
 void state_idle_update_fast()
