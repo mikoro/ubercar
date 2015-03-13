@@ -26,6 +26,7 @@ void state_recover_init()
 	irsens_reset();
 	
 	lcd_draw_header("RECOVER");
+	lcd_printg(45, 130, 3, 0, 31, 31, 0, 12, 12, "!");
 }
 
 void state_recover_update_fixed()
