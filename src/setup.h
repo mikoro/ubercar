@@ -10,7 +10,7 @@
 #define TACHO_UPDATE_FREQ 4 // Hz
 #define TACHO_AVG_AMOUNT 4 // taps
 #define TACHO_ENABLE_STOP_DETECTION 1
-#define TACHO_STOP_THRESHOLD 2 // speed
+#define TACHO_STOP_THRESHOLD 15 // speed
 
 //                          right edge                  left edge
 #define IRSENS_LOCATION_MAP {127, 91, 54, 10, -10, -54, -91, -127}
