@@ -12,6 +12,8 @@
 #include "pid.h"
 #include "setup.h"
 
+static uint8_t lap_count = 0;
+
 void state_drive_init()
 {
 	motor_set_power(0);
@@ -28,6 +30,8 @@ void state_drive_init()
 	tacho_reset();
 	
 	lcd_draw_header("DRIVE");
+	
+	lap_count = 0;
 }
 
 void state_drive_update_fixed()
@@ -45,6 +49,14 @@ void state_drive_update_fixed()
 	{
 		manager_set_state(STATE_RECOVER);
 		return;
+	}
+	
+	if (irsens_is_at_start_line())
+	{
+		++lap_count;
+		irsens_reset_is_at_start_line();
+		
+		lcd_printg(45, 130, 3, 0, 31, 0, 0, 12, 12, "0");
 	}
 	
 	int8_t irsens_location = irsens_get_location();
