@@ -67,7 +67,7 @@ void state_drive_update_fixed()
 	uint8_t tacho_speed = tacho_get_speed();
 	
 	int8_t steering_direction = pid_steering_calculate(irsens_location);
-	uint8_t motor_power = pid_motor_calculate(TARGET_SPEED - irsens_get_relative_location(), tacho_speed);
+	uint8_t motor_power = pid_motor_calculate(TARGET_SPEED - irsens_get_speed_decrease(), tacho_speed);
 	
 	steering_set_direction(steering_direction);
 	motor_set_power(motor_power);

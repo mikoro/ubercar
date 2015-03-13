@@ -23,6 +23,6 @@ void pid_motor_set_kd(fix8_t kd);
 // ref: wanted speed (in tacho units), 0 .. 255
 // meas: speed value from tacho, 0 .. 255
 // return: motor power value, 0 .. 255
-uint8_t pid_motor_calculate(uint8_t ref, uint8_t meas);
+uint8_t pid_motor_calculate(uint8_t ref_speed, uint8_t meas_speed);
 
 #endif

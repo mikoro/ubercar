@@ -6,9 +6,9 @@
 #include "setup.h"
 
 static const int8_t location_map[8] = IRSENS_LOCATION_MAP;
-static const int8_t relative_location_map[8] = IRSENS_RELATIVE_LOCATION_MAP;
+static const int8_t speed_decrease_map[8] = IRSENS_SPEED_DECREASE_MAP;
 static int8_t location = 0;
-static uint8_t relative_location = 0;
+static uint8_t speed_decrease = 0;
 
 static int8_t sensor_value = 0;
 static int8_t previous_sensor_value = -127;
@@ -19,6 +19,8 @@ static uint8_t same_value_count = 0;
 static uint8_t start_line_count = 0;
 
 static uint8_t has_crossed_start_line = 0;
+static uint8_t is_sensing = 0;
+static uint8_t is_at_center = 0;
 static uint8_t is_at_edge = 0;
 static uint8_t is_stuck = 0;
 
@@ -68,7 +70,7 @@ void irsens_init()
 void irsens_reset()
 {
 	location = 0;
-	relative_location = 0;
+	speed_decrease = 0;
 
 	sensor_value = 0;
 	previous_sensor_value = -127;
@@ -79,6 +81,8 @@ void irsens_reset()
 	start_line_count = 0;
 	
 	has_crossed_start_line = 0;
+	is_sensing = 0;
+	is_at_center = 0;
 	is_at_edge = 0;
 	is_stuck = 0;
 }
@@ -92,6 +96,7 @@ void irsens_read_sensor()
 	if (new_sensor_value != 0)
 	{
 		sensor_value = new_sensor_value;
+		is_sensing = 1;
 		
 		// TODO needs testing for the right bit amount
 		if (get_bit_count(sensor_value) >= 3)
@@ -100,6 +105,8 @@ void irsens_read_sensor()
 			start_line_count = 0;
 		}
 	}
+	else
+		is_sensing = 0;
 }
 
 void irsens_update()
@@ -140,7 +147,7 @@ void irsens_update()
 		
 	previous_bit_index = bit_index;
 	location = location_map[bit_index];
-	relative_location = relative_location_map[bit_index];
+	speed_decrease = speed_decrease_map[bit_index];
 	
 	// detect which direction the detections are going
 	if (bit_index_diff <= -1)
@@ -149,6 +156,9 @@ void irsens_update()
 		change_direction = RIGHT;
 	else
 		change_direction = NONE;
+		
+	// detect if we are at the center
+	is_at_center = (bit_index == 4 || bit_index == 3);
 	
 	// detect if we are at the edges
 	is_at_edge = (bit_index == 7 || bit_index == 0);
@@ -165,9 +175,9 @@ int8_t irsens_get_location()
 	return location;
 }
 
-uint8_t irsens_get_relative_location()
+uint8_t irsens_get_speed_decrease()
 {
-	return relative_location;
+	return speed_decrease;
 }
 
 uint8_t irsens_has_crossed_start_line()
@@ -178,6 +188,16 @@ uint8_t irsens_has_crossed_start_line()
 void irsens_reset_has_crossed_start_line()
 {
 	has_crossed_start_line = 0;
+}
+
+uint8_t irsens_is_sensing()
+{
+	return is_sensing;
+}
+
+uint8_t irsens_is_at_center()
+{
+	return is_at_center;
 }
 
 uint8_t irsens_is_at_edge()

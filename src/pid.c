@@ -98,10 +98,10 @@ int8_t pid_steering_calculate(int8_t ref)
 	return fix8_to_int(steering_output);
 }
 
-uint8_t pid_motor_calculate(uint8_t ref, uint8_t meas)
+uint8_t pid_motor_calculate(uint8_t ref_speed, uint8_t meas_speed)
 {
-	int16_t temp_ref = (int16_t)ref;
-	int16_t temp_meas = (int16_t)meas;
+	int16_t temp_ref = (int16_t)ref_speed;
+	int16_t temp_meas = (int16_t)meas_speed;
 	
 	// e = r - m
 	int16_t error = temp_ref - temp_meas;
