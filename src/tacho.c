@@ -9,6 +9,8 @@
 typedef enum { STARTING, RUNNING } tacho_state_t;
 	
 static uint8_t speed = 0;
+static uint8_t previous_speed = 0;
+static int8_t speed_diff = 0;
 static volatile uint16_t distance = 0;
 static volatile uint16_t values[TACHO_AVG_AMOUNT] = {0};
 static volatile uint8_t value_index = 0;
@@ -47,6 +49,8 @@ void tacho_init()
 void tacho_reset()
 {
 	speed = 0;
+	previous_speed = 0;
+	speed_diff = 0;
 	
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	{
@@ -84,6 +88,8 @@ void tacho_update()
 		speed_sum = 255;
 	
 	speed = speed_sum;
+	speed_diff = (int8_t)((int16_t)speed - (int16_t)previous_speed);
+	previous_speed = speed;
 	
 	if (state == STARTING)
 	{
@@ -127,4 +133,19 @@ uint16_t tacho_get_distance_m()
 uint8_t tacho_has_stopped()
 {
 	return has_stopped;
+}
+
+uint8_t tacho_is_accelerating()
+{
+	return (speed_diff > 0);
+}
+
+uint8_t tacho_is_decelerating()
+{
+	return (speed_diff < 0);
+}
+
+uint8_t tacho_is_steady()
+{
+	return (speed_diff == 0);
 }
