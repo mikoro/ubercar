@@ -16,8 +16,9 @@ static uint8_t previous_bit_index = 0;
 static side_t change_direction = NONE;
 static side_t last_edge = NONE;
 static uint8_t same_value_count = 0;
+static uint8_t start_line_count = 0;
 
-static uint8_t is_at_start_line = 0;
+static uint8_t has_crossed_start_line = 0;
 static uint8_t is_at_edge = 0;
 static uint8_t is_stuck = 0;
 
@@ -75,8 +76,9 @@ void irsens_reset()
 	change_direction = NONE;
 	last_edge = NONE;
 	same_value_count = 0;
-
-	is_at_start_line = 0;
+	start_line_count = 0;
+	
+	has_crossed_start_line = 0;
 	is_at_edge = 0;
 	is_stuck = 0;
 }
@@ -85,15 +87,32 @@ void irsens_read_sensor()
 {
 	uint8_t new_sensor_value = ~IRSENS_PIN;
 	
+	// update the sensor value only if it is not zero (i.e stick with the latest non-zero reading)
+	// if set to zero, the update function (which is called less frequently) will miss sensor readings
 	if (new_sensor_value != 0)
 	{
 		sensor_value = new_sensor_value;
-		is_at_start_line = (get_bit_count(sensor_value) >= 3);
+		
+		// TODO needs testing for the right bit amount
+		if (get_bit_count(sensor_value) >= 3)
+		{
+			has_crossed_start_line = 1;
+			start_line_count = 0;
+		}
 	}
 }
 
 void irsens_update()
 {
+	// keep the steering constant for 200 ms after entering the start line
+	// this will prevent the sudden steerings when crossing the start line with a little angle
+	// TODO test if actually works and tune timing
+	if (start_line_count < (200 / (uint8_t)TIME_STEP_MS))
+	{
+		++start_line_count;
+		sensor_value = 0x08;
+	}
+	
 	// detect if we are stuck somewhere and the sensor value never changes
 	if (sensor_value == previous_sensor_value)
 	{
@@ -104,8 +123,6 @@ void irsens_update()
 			same_value_count = 0;
 			is_stuck = 1;
 		}
-		
-		return;
 	}
 	else
 		same_value_count = 0;
@@ -114,16 +131,12 @@ void irsens_update()
 	
 	uint8_t bit_count = get_bit_count(sensor_value);
 	
+	// skip situations where no good data can be calculated (location value will stay the same)
 	if (bit_count == 0 || bit_count > 1)
 		return;
 		
 	uint8_t bit_index = get_right_bit_index(sensor_value);
 	int8_t bit_index_diff = (int8_t)previous_bit_index - (int8_t)bit_index;
-	
-	// used to eliminate the start line "jumping"
-	// TODO needs a counter to reset after x ms
-	if (abs(bit_index_diff) > 2)
-		return;
 		
 	previous_bit_index = bit_index;
 	location = location_map[bit_index];
@@ -157,14 +170,14 @@ uint8_t irsens_get_relative_location()
 	return relative_location;
 }
 
-uint8_t irsens_is_at_start_line()
+uint8_t irsens_has_crossed_start_line()
 {
-	return is_at_start_line;
+	return has_crossed_start_line;
 }
 
-void irsens_reset_is_at_start_line()
+void irsens_reset_has_crossed_start_line()
 {
-	is_at_start_line = 0;
+	has_crossed_start_line = 0;
 }
 
 uint8_t irsens_is_at_edge()
