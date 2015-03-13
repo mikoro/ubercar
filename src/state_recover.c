@@ -10,10 +10,12 @@
 #include "irsens.h"
 #include "measurer.h"
 #include "pid.h"
+#include "setup.h"
 
-typedef enum { STOPPING, STOPPED } recover_state_t;
+typedef enum { STOPPING, STOPPED, DRIFT } recover_state_t;
 
 static recover_state_t state = STOPPING;
+static uint16_t timer = 0;
 
 void state_recover_init()
 {
@@ -28,6 +30,7 @@ void state_recover_init()
 	lcd_printg(45, 130, 3, 0, 31, 31, 0, 12, 12, "!");
 	
 	state = STOPPING;
+	timer = 0;
 }
 
 void state_recover_update_fixed()
@@ -53,6 +56,30 @@ void state_recover_update_fixed()
 		{
 			motor_set_power(0);
 			state = STOPPED;
+		}
+	}
+	
+	if (state == DRIFT)
+	{
+		++timer;
+		
+		if (timer >= (0 * CONTROL_FREQ) && timer <= (8 * CONTROL_FREQ))
+		{
+			steering_set_direction(127);
+		}
+		
+		if (timer >= (1 * CONTROL_FREQ) && timer <= (8 * CONTROL_FREQ))
+		{
+			motor_set_power_nolimit(672);
+		}
+		else
+			motor_set_power_nolimit(0);
+			
+		if (timer > (8 * CONTROL_FREQ))
+		{
+			steering_set_direction(0);
+			state = STOPPED;
+			timer = 0;
 		}
 	}
 }

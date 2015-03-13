@@ -24,7 +24,7 @@
 // Car 1 (Red leds)
 ////////////////////////
 ///*
-#define MINIMUM_POWER 60
+#define MINIMUM_POWER 50
 #define TARGET_SPEED 22
 #define MOTOR_KP 0.3
 #define MOTOR_KI 0.003
