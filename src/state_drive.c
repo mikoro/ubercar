@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "states.h"
 #include "manager.h"
 #include "iomap.h"
@@ -30,6 +32,8 @@ void state_drive_init()
 	tacho_reset();
 	
 	lcd_draw_header("DRIVE");
+	lcd_printf(1, 12, 3, 31, 63, 31, "Lap: 0");
+	lcd_printf(1, 13, 3, 31, 63, 31, "Dst: 0 m");
 	
 	lap_count = 0;
 }
@@ -55,8 +59,8 @@ void state_drive_update_fixed()
 	{
 		++lap_count;
 		irsens_reset_is_at_start_line();
-		
-		lcd_printg(45, 130, 3, 0, 31, 0, 0, 12, 12, "0");
+		lcd_printf(1, 12, 3, 31, 63, 31, "Lap: %u", lap_count);
+		lcd_printf(1, 13, 3, 31, 63, 31, "Dst: %u m", tacho_get_distance_m());
 	}
 	
 	int8_t irsens_location = irsens_get_location();

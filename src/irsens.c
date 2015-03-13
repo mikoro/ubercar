@@ -88,7 +88,7 @@ void irsens_read_sensor()
 	if (new_sensor_value != 0)
 	{
 		sensor_value = new_sensor_value;
-		is_at_start_line = (get_bit_count(sensor_value) >= 6);
+		is_at_start_line = (get_bit_count(sensor_value) >= 3);
 	}
 }
 
