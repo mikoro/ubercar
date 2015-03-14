@@ -12,11 +12,6 @@
 #define TACHO_ENABLE_STOP_DETECTION 1
 #define TACHO_STOP_DETECTION_THRESHOLD 10 // speed
 
-//                          right edge                  left edge
-#define IRSENS_LOCATION_MAP {127, 91, 54, 10, -10, -54, -91, -127}
-//#define IRSENS_LOCATION_MAP {127, 96, 64, 32, 0, -43, -86, -128}
-//#define IRSENS_LOCATION_MAP {127, 84, 42, 0, -32, -64, -96, -128}
-#define IRSENS_SPEED_DECREASE_MAP {6, 4, 2, 0, 0, 2, 4, 6}
 #define IRSENS_ENABLE_STUCK_DETECTION 0
 #define IRSENS_STUCK_DETECTION_THRESHOLD 4 // seconds
 #define IRSENS_START_LINE_DETECTION_THRESHOLD 3 // bits, i.e. simultaneous readings from the sensor
@@ -31,11 +26,18 @@
 // Car 1 (Red leds)
 ////////////////////////
 ///*
-#define MINIMUM_POWER 50
+#define POWER_OFFSET 50
+#define STEERING_OFFSET 0
 #define TARGET_SPEED 22
+
+#define IRSENS_LOCATION_MAP_FIXED { 127, 91, 54, 10, -10, -54, -91, -127 }
+#define IRSENS_LOCATION_MAP_PID { 127, 91, 54, 10, -10, -54, -91, -127 }
+#define IRSENS_SPEED_DECREASE_MAP { 6, 4, 2, 0, 0, 2, 4, 6 }
+
 #define MOTOR_KP 0.3
 #define MOTOR_KI 0.01
 #define MOTOR_KD 0.4
+
 #define STEERING_KP 1.0
 #define STEERING_KI 0.0
 #define STEERING_KD 0.0

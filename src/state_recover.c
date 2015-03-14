@@ -9,7 +9,7 @@
 #include "tacho.h"
 #include "irsens.h"
 #include "measurer.h"
-#include "pid.h"
+#include "controller.h"
 #include "setup.h"
 
 typedef enum { STOPPING, STOPPED, DRIFT } recover_state_t;
@@ -45,15 +45,12 @@ void state_recover_update_fixed()
 	tacho_update();
 	measurer_update();
 	
-	int8_t irsens_location = irsens_get_location();
-	uint8_t tacho_speed = tacho_get_speed();
-	
 	if (state == STOPPING)
 	{
-		uint8_t motor_power = pid_motor_calculate(0, tacho_speed);
-		motor_set_power(motor_power);
+		controller_motor_set_target_speed(0);
+		controller_motor_update_pid();
 		
-		if (tacho_is_accelerating() || tacho_speed < 2)
+		if (tacho_is_accelerating())
 		{
 			motor_set_power(0);
 			state = STOPPED;
@@ -68,6 +65,8 @@ void state_recover_update_fixed()
 		{
 			steering_set_direction(127);
 		}
+		else
+			steering_set_direction(0);
 		
 		if (update_count >= (1 * CONTROL_FREQ) && update_count <= (8 * CONTROL_FREQ))
 		{
@@ -78,7 +77,6 @@ void state_recover_update_fixed()
 			
 		if (update_count > (8 * CONTROL_FREQ))
 		{
-			steering_set_direction(0);
 			state = STOPPED;
 			update_count = 0;
 		}

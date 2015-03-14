@@ -11,7 +11,7 @@
 #include "tacho.h"
 #include "irsens.h"
 #include "measurer.h"
-#include "pid.h"
+#include "controller.h"
 #include "setup.h"
 
 void state_drive_init()
@@ -23,8 +23,8 @@ void state_drive_init()
 	steering_set_direction(0);
 	steering_set_enabled(1);
 	
-	pid_steering_reset();
-	pid_motor_reset();
+	controller_steering_reset();
+	controller_motor_reset();
 	
 	irsens_reset();
 	tacho_reset();
@@ -38,13 +38,9 @@ void state_drive_update_fixed()
 {
 	if (button_was_released())
 	{
-		manager_set_state(STATE_MEASURE);
+		manager_set_state(STATE_RECOVER);
 		return;
 	}
-	
-	irsens_update();
-	tacho_update();
-	measurer_update();
 	
 	if ((IRSENS_ENABLE_STUCK_DETECTION && irsens_is_stuck()) || (TACHO_ENABLE_STOP_DETECTION && tacho_has_stopped()))
 	{
@@ -52,14 +48,14 @@ void state_drive_update_fixed()
 		return;
 	}
 	
-	int8_t irsens_location = irsens_get_location();
-	uint8_t tacho_speed = tacho_get_speed();
+	irsens_update();
+	tacho_update();
+	measurer_update();
 	
-	int8_t steering_direction = pid_steering_calculate(irsens_location);
-	uint8_t motor_power = pid_motor_calculate(TARGET_SPEED - irsens_get_speed_decrease(), tacho_speed);
-	
-	steering_set_direction(steering_direction);
-	motor_set_power(motor_power);
+	controller_motor_set_target_speed(TARGET_SPEED - irsens_get_speed_decrease());
+	controller_motor_update_pid();
+	//controller_steering_update_pid();
+	controller_steering_update_fixed();
 }
 
 void state_drive_update_fast()

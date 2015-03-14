@@ -11,7 +11,7 @@
 #include "tacho.h"
 #include "irsens.h"
 #include "measurer.h"
-#include "pid.h"
+#include "controller.h"
 
 void state_error_init()
 {

@@ -5,9 +5,11 @@
 #include "iomap.h"
 #include "setup.h"
 
-static const int8_t location_map[8] = IRSENS_LOCATION_MAP;
+static const int8_t location_map_fixed[8] = IRSENS_LOCATION_MAP_FIXED;
+static const int8_t location_map_pid[8] = IRSENS_LOCATION_MAP_PID;
 static const int8_t speed_decrease_map[8] = IRSENS_SPEED_DECREASE_MAP;
-static int8_t location = 0;
+static int8_t location_fixed = 0;
+static int8_t location_pid = 0;
 static uint8_t speed_decrease = 0;
 
 static int8_t sensor_value = 0;
@@ -70,7 +72,8 @@ void irsens_init()
 
 void irsens_reset()
 {
-	location = 0;
+	location_fixed = 0;
+	location_pid = 0;
 	speed_decrease = 0;
 
 	sensor_value = 0;
@@ -153,7 +156,8 @@ void irsens_update()
 	int8_t bit_index_diff = (int8_t)previous_bit_index - (int8_t)bit_index;
 		
 	previous_bit_index = bit_index;
-	location = location_map[bit_index];
+	location_fixed = location_map_fixed[bit_index];
+	location_pid = location_map_pid[bit_index];
 	speed_decrease = speed_decrease_map[bit_index];
 	
 	// detect which direction the detections are going
@@ -177,9 +181,14 @@ void irsens_update()
 		last_edge = LEFT;
 }
 
-int8_t irsens_get_location()
+int8_t irsens_get_location_fixed()
 {
-	return location;
+	return location_fixed;
+}
+
+int8_t irsens_get_location_pid()
+{
+	return location_pid;
 }
 
 uint8_t irsens_get_speed_decrease()

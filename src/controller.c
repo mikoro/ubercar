@@ -1,5 +1,9 @@
-#include "pid.h"
+#include "controller.h"
 #include "lcd.h"
+#include "tacho.h"
+#include "steering.h"
+#include "motor.h"
+#include "irsens.h"
 #include "setup.h"
 
 static fix8_t steering_kp = F8(STEERING_KP);
@@ -7,66 +11,60 @@ static fix8_t steering_ki = F8(STEERING_KI);
 static fix8_t steering_kd = F8(STEERING_KD);
 static fix8_t steering_integral = F8(0.0);
 static fix8_t steering_previous_error = F8(0.0);
-static fix8_t steering_output = F8(0.0);
+static fix8_t steering_direction_value = F8(0.0);
+static fix8_t steering_x = F8(0.0);
 
 static fix8_t motor_kp = F8(MOTOR_KP);
 static fix8_t motor_ki = F8(MOTOR_KI);
 static fix8_t motor_kd = F8(MOTOR_KD);
 static fix8_t motor_integral = F8(0.0);
 static fix8_t motor_previous_error = F8(0.0);
-static fix8_t motor_output = F8(-128.0);
+static fix8_t motor_power_value = F8(-128.0);
+static uint8_t motor_target_speed = 0;
 
-void pid_steering_reset()
+void controller_steering_reset()
 {
 	steering_integral = F8(0.0);
 	steering_previous_error = F8(0.0);
-	steering_output = F8(0.0);
+	steering_direction_value = F8(0.0);
+	steering_x = F8(0.0);
 }
 
-void pid_motor_reset()
+void controller_motor_reset()
 {
 	motor_integral = F8(0.0);
 	motor_previous_error = F8(0.0);
-	motor_output = F8(-128.0);
+	motor_power_value = F8(-128.0);
+	motor_target_speed = 0;
 }
 
-void pid_steering_set_kp(fix8_t kp)
+void controller_motor_set_target_speed(uint8_t speed)
 {
-	steering_kp = kp;
+	motor_target_speed = speed;
 }
 
-void pid_steering_set_ki(fix8_t ki)
+void controller_steering_update_pid()
 {
-	steering_ki = ki;
-}
-
-void pid_steering_set_kd(fix8_t kd)
-{
-	steering_kd = kd;
-}
-
-void pid_motor_set_kp(fix8_t kp)
-{
-	motor_kp = kp;
-}
-
-void pid_motor_set_ki(fix8_t ki)
-{
-	motor_ki = ki;
-}
-
-void pid_motor_set_kd(fix8_t kd)
-{
-	motor_kd = kd;
-}
-
-int8_t pid_steering_calculate(int8_t ref)
-{
-	int16_t temp_ref = (int16_t)ref;
-	int16_t temp_meas = (int16_t)fix8_to_int(steering_output);
+	// vy
+	fix8_t velocity_y = fix8_from_int((int8_t)tacho_get_speed());
 	
+	// sin(steering_angle)
+	// it is actually the sine of the real physical turning angle of the wheels
+	fix8_t direction_sine = steering_get_sine(fix8_to_int(steering_direction_value));
+	
+	// vx = vy * sin(steering_angle)
+	fix8_t velocity_x = fix8_mul(velocity_y, direction_sine);
+	
+	// x = x + vx * dt
+	steering_x = fix8_add(steering_x, fix8_mul(velocity_x, F8(TIME_STEP)));
+	
+	// if we have active sensor reading, use that instead
+	if (irsens_is_sensing())
+		steering_x = fix8_from_int(irsens_get_location_pid());
+	
+	// always try to steer back to center
 	// e = r - m
-	int16_t error = temp_ref - temp_meas;
+	int16_t error = (int16_t)0 - steering_x;
 	
 	if (error < -128)
 		error = -128;
@@ -93,25 +91,27 @@ int8_t pid_steering_calculate(int8_t ref)
 	control_value = fix8_add(control_value, fix8_mul(steering_kd, steering_derivate));
 	
 	// o += u
-	steering_output = fix8_add(steering_output, control_value);
+	steering_direction_value = fix8_add(steering_direction_value, control_value);
 	
-	return fix8_to_int(steering_output);
+	steering_set_direction(fix8_to_int(steering_direction_value));
 }
 
-uint8_t pid_motor_calculate(uint8_t ref_speed, uint8_t meas_speed)
+void controller_steering_update_fixed()
 {
-	int16_t temp_ref = (int16_t)ref_speed;
-	int16_t temp_meas = (int16_t)meas_speed;
-	
+	steering_set_direction(irsens_get_location_fixed());
+}
+
+void controller_motor_update_pid()
+{
 	// e = r - m
-	int16_t error = temp_ref - temp_meas;
+	int16_t error = (int16_t)motor_target_speed - (int16_t)tacho_get_speed();
 	
 	if (error < -128)
 		error = -128;
-		
+	
 	if (error > 127)
 		error = 127;
-		
+	
 	fix8_t clamped_error = fix8_from_int((int8_t)error);
 	
 	// I = I + e * dt
@@ -131,9 +131,10 @@ uint8_t pid_motor_calculate(uint8_t ref_speed, uint8_t meas_speed)
 	control_value = fix8_add(control_value, fix8_mul(motor_kd, motor_derivate));
 	
 	// o += u
-	motor_output = fix8_add(motor_output, control_value);
+	motor_power_value = fix8_add(motor_power_value, control_value);
 	
-	// shift output to 0..255 range
-	int16_t output = (int16_t)fix8_to_int(motor_output);
-	return (uint8_t)(output + 128);
+	// shift to 0..255 range
+	uint8_t motor_power_value_shifted = (uint8_t)((int16_t)fix8_to_int(motor_power_value) + 128);
+	
+	motor_set_power(motor_power_value_shifted);
 }

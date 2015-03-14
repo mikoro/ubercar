@@ -58,7 +58,7 @@ void motor_set_direction(motor_dir_t dir)
 // Input range 0 .. 255
 void motor_set_power(uint8_t power)
 {
-	uint16_t adjusted_power = (uint16_t)power + MINIMUM_POWER;
+	uint16_t adjusted_power = (uint16_t)power + POWER_OFFSET;
 	
 	// full duty cycle range is 0 .. 800
 	// limit to 1/3 of full power
@@ -71,7 +71,7 @@ void motor_set_power(uint8_t power)
 // Input range 0 .. 672
 void motor_set_power_nolimit(uint16_t power)
 {
-	uint16_t adjusted_power = power + MINIMUM_POWER;
+	uint16_t adjusted_power = power + POWER_OFFSET;
 	
 	// full duty cycle range is 0 .. 800
 	// allow for 8 us PWM off period to avoid short to battery detection
