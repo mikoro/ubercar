@@ -14,8 +14,6 @@
 #include "pid.h"
 #include "setup.h"
 
-static uint8_t lap_count = 0;
-
 void state_drive_init()
 {
 	motor_set_power(0);
@@ -30,12 +28,10 @@ void state_drive_init()
 	
 	irsens_reset();
 	tacho_reset();
+	measurer_reset();
 	
 	lcd_draw_header("DRIVE");
-	lcd_printf(1, 12, 3, 31, 63, 31, "Lap: 0");
-	lcd_printf(1, 13, 3, 31, 63, 31, "Dst: 0 m");
-	
-	lap_count = 0;
+	measurer_print_info();
 }
 
 void state_drive_update_fixed()
@@ -48,19 +44,12 @@ void state_drive_update_fixed()
 	
 	irsens_update();
 	tacho_update();
+	measurer_update();
 	
 	if ((IRSENS_ENABLE_STUCK_DETECTION && irsens_is_stuck()) || (TACHO_ENABLE_STOP_DETECTION && tacho_has_stopped()))
 	{
 		manager_set_state(STATE_RECOVER);
 		return;
-	}
-	
-	if (irsens_is_at_start_line())
-	{
-		++lap_count;
-		irsens_reset_is_at_start_line();
-		lcd_printf(1, 12, 3, 31, 63, 31, "Lap: %u", lap_count);
-		lcd_printf(1, 13, 3, 31, 63, 31, "Dst: %u m", tacho_get_distance_m());
 	}
 	
 	int8_t irsens_location = irsens_get_location();

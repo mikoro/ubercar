@@ -16,7 +16,8 @@ static uint8_t previous_bit_index = 0;
 static side_t change_direction = NONE;
 static side_t last_edge = NONE;
 static uint8_t same_value_count = 0;
-static uint8_t start_line_count = 0;
+static uint8_t start_line_drive_straight_count = 0;
+static uint8_t start_line_ignore_count = 0;
 
 static uint8_t has_crossed_start_line = 0;
 static uint8_t is_sensing = 0;
@@ -78,7 +79,8 @@ void irsens_reset()
 	change_direction = NONE;
 	last_edge = NONE;
 	same_value_count = 0;
-	start_line_count = 0;
+	start_line_drive_straight_count = 0;
+	start_line_ignore_count = 0;
 	
 	has_crossed_start_line = 0;
 	is_sensing = 0;
@@ -99,10 +101,12 @@ void irsens_read_sensor()
 		is_sensing = 1;
 		
 		// TODO needs testing for the right bit amount
-		if (get_bit_count(sensor_value) >= 3)
+		if (get_bit_count(sensor_value) >= IRSENS_START_LINE_DETECTION_THRESHOLD)
 		{
-			has_crossed_start_line = 1;
-			start_line_count = 0;
+			start_line_drive_straight_count = 0;
+			
+			if (start_line_ignore_count > (IRSENS_START_LINE_IGNORE_DURATION * CONTROL_FREQ))
+				has_crossed_start_line = 1;
 		}
 	}
 	else
@@ -111,12 +115,15 @@ void irsens_read_sensor()
 
 void irsens_update()
 {
-	// keep the steering constant for 200 ms after entering the start line
+	if (start_line_ignore_count < 255)
+		++start_line_ignore_count;
+		
+	// keep the steering constant after entering the start line
 	// this will prevent the sudden steerings when crossing the start line with a little angle
 	// TODO test if actually works and tune timing
-	if (start_line_count < (200 / (uint8_t)TIME_STEP_MS))
+	if (start_line_drive_straight_count < (IRSENS_START_LINE_DRIVE_STRAIGHT_MS / (uint8_t)TIME_STEP_MS))
 	{
-		++start_line_count;
+		++start_line_drive_straight_count;
 		sensor_value = 0x08;
 	}
 	
@@ -125,7 +132,7 @@ void irsens_update()
 	{
 		++same_value_count;
 		
-		if (same_value_count > (IRSENS_STUCK_DURATION * CONTROL_FREQ))
+		if (same_value_count > (IRSENS_STUCK_DETECTION_THRESHOLD * CONTROL_FREQ))
 		{
 			same_value_count = 0;
 			is_stuck = 1;
@@ -188,6 +195,7 @@ uint8_t irsens_has_crossed_start_line()
 void irsens_reset_has_crossed_start_line()
 {
 	has_crossed_start_line = 0;
+	start_line_ignore_count = 0;
 }
 
 uint8_t irsens_is_sensing()

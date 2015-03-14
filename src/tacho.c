@@ -93,12 +93,12 @@ void tacho_update()
 	
 	if (state == STARTING)
 	{
-		if (speed > TACHO_STOP_THRESHOLD)
+		if (speed > TACHO_STOP_DETECTION_THRESHOLD)
 			state = RUNNING;
 	}
 	else if (state == RUNNING)
 	{
-		if (speed <= TACHO_STOP_THRESHOLD)
+		if (speed <= TACHO_STOP_DETECTION_THRESHOLD)
 			has_stopped = 1;
 	}
 }

@@ -4,11 +4,8 @@
 #include <stdint.h>
 
 void measurer_reset();
-
-void measurer_measure_update();
-uint8_t measurer_is_finished();
-
-void measurer_race_update();
-uint8_t measurer_is_on_straight();
+void measurer_update();
+void measurer_print_info();
+uint8_t measurer_get_lap_count();
 
 #endif

@@ -9,6 +9,6 @@ void manager_init();
 void manager_set_state(state_t new_state);
 void manager_run();
 void manager_reset_timer();
-uint16_t manager_get_elapsed_time();
+uint16_t manager_get_timer_elapsed_ms();
 
 #endif

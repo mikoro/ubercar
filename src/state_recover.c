@@ -15,7 +15,7 @@
 typedef enum { STOPPING, STOPPED, DRIFT } recover_state_t;
 
 static recover_state_t state = STOPPING;
-static uint16_t timer = 0;
+static uint8_t update_count = 0;
 
 void state_recover_init()
 {
@@ -27,10 +27,10 @@ void state_recover_init()
 	steering_set_enabled(1);
 	
 	lcd_draw_header("RECOVER");
-	lcd_printg(45, 130, 3, 0, 31, 31, 0, 12, 12, "!");
+	measurer_print_info();
 	
 	state = STOPPING;
-	timer = 0;
+	update_count = 0;
 }
 
 void state_recover_update_fixed()
@@ -43,6 +43,7 @@ void state_recover_update_fixed()
 	
 	irsens_update();
 	tacho_update();
+	measurer_update();
 	
 	int8_t irsens_location = irsens_get_location();
 	uint8_t tacho_speed = tacho_get_speed();
@@ -61,25 +62,25 @@ void state_recover_update_fixed()
 	
 	if (state == DRIFT)
 	{
-		++timer;
+		++update_count;
 		
-		if (timer >= (0 * CONTROL_FREQ) && timer <= (8 * CONTROL_FREQ))
+		if (update_count >= (0 * CONTROL_FREQ) && update_count <= (8 * CONTROL_FREQ))
 		{
 			steering_set_direction(127);
 		}
 		
-		if (timer >= (1 * CONTROL_FREQ) && timer <= (8 * CONTROL_FREQ))
+		if (update_count >= (1 * CONTROL_FREQ) && update_count <= (8 * CONTROL_FREQ))
 		{
 			motor_set_power_nolimit(672);
 		}
 		else
 			motor_set_power_nolimit(0);
 			
-		if (timer > (8 * CONTROL_FREQ))
+		if (update_count > (8 * CONTROL_FREQ))
 		{
 			steering_set_direction(0);
 			state = STOPPED;
-			timer = 0;
+			update_count = 0;
 		}
 	}
 }

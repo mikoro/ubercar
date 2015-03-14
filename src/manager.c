@@ -30,15 +30,15 @@ static state_info_t const state_procs[NUM_STATES] = {
 };
 
 static state_t current_state = STATE_IDLE;
-static volatile uint8_t ms_elapsed_loop = 0;
-static volatile uint16_t ms_elapsed_timer = 0;
+static volatile uint8_t loop_elapsed_ms = 0;
+static volatile uint16_t timer_elapsed_ms = 0;
 static uint8_t led_toggle_counter = 0;
 static uint8_t button_down_count = 0;
 
 ISR(STATEMANREF_COMPA_vect)
 {
-	++ms_elapsed_loop;
-	++ms_elapsed_timer;
+	++loop_elapsed_ms;
+	++timer_elapsed_ms;
 	
 	STATEMANREF_TCNT = 0;
 }
@@ -73,7 +73,7 @@ void manager_run()
 		if (button_is_down() && current_state != STATE_IDLE)
 		{
 			// 1 second
-			if (++button_down_count >= CONTROL_FREQ)
+			if (++button_down_count >= (1 * CONTROL_FREQ))
 			{
 				manager_set_state(STATE_IDLE);
 				button_ignore_next();
@@ -87,15 +87,15 @@ void manager_run()
 		if (++led_toggle_counter % (CONTROL_FREQ / 2) == 0)
 			led_toggle0();
 		
-		// lock the fixed loop to some Hz
+		// lock the fixed loop to given Hz
 		// no atomic block (one byte read)
-		while (ms_elapsed_loop < TIME_STEP_MS)
+		while (loop_elapsed_ms < TIME_STEP_MS)
 		{
 			// while waiting, do non-fixed-time updates
 			state_procs[current_state].update_fast_proc();
 		}
 		
-		ms_elapsed_loop = 0;
+		loop_elapsed_ms = 0;
 	}
 }
 
@@ -103,18 +103,18 @@ void manager_reset_timer()
 {
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	{
-		ms_elapsed_timer = 0;
+		timer_elapsed_ms = 0;
 	}
 }
 
-uint16_t manager_get_elapsed_time()
+uint16_t manager_get_timer_elapsed_ms()
 {
-	uint16_t elapsed_time;
+	uint16_t timer_elapsed_ms_temp;
 	
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	{
-		elapsed_time = ms_elapsed_timer;
+		timer_elapsed_ms_temp = timer_elapsed_ms;
 	}
 	
-	return elapsed_time;
+	return timer_elapsed_ms_temp;
 }
