@@ -53,16 +53,16 @@ void measurer_print_info()
 	
 	for (uint8_t i = 0; i < MEASURER_MAX_LAP_TIMES; ++i)
 	{
-		if (lap_times[i] < best_lap_time)
+		if (lap_times[i] < best_lap_time && lap_times[i] != 0)
 			best_lap_time = lap_times[i];
 	}
 	
 	uint16_t best_lap_time_s = best_lap_time / 1000;
 	uint16_t best_lap_time_ms = best_lap_time % 1000;
 	
-	lcd_printf(1, 12, 3, 31, 63, 31, "Total laps: %u      ", lap_count);
-	lcd_printf(1, 13, 3, 31, 63, 31, "Total dist: %u m    ", tacho_get_distance_m());
-	lcd_printf(1, 14, 3, 31, 63, 31, "Best time:  %u.%03u s    ", best_lap_time_s, best_lap_time_ms);
+	lcd_printf(0, 9, 3, 31, 63, 31, "Total laps: %u      ", lap_count);
+	lcd_printf(0, 10, 3, 31, 63, 31, "Total dist: %u m    ", tacho_get_distance_m());
+	lcd_printf(0, 11, 3, 31, 63, 31, "Best time:  %u.%03u s    ", best_lap_time_s, best_lap_time_ms);
 }
 
 uint8_t measurer_get_lap_count()

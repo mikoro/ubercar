@@ -8,11 +8,10 @@ SRC :=	src/button.c \
 		src/manager.c \
 		src/measurer.c \
 		src/motor.c \
-		src/pid.c \
+		src/controller.c \
 		src/state_drive.c \
 		src/state_error.c \
 		src/state_idle.c \
-		src/state_measure.c \
 		src/state_recover.c \
 		src/steering.c \
 		src/tacho.c

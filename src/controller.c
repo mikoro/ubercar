@@ -91,7 +91,7 @@ void controller_steering_update_pid()
 	control_value = fix8_add(control_value, fix8_mul(steering_kd, steering_derivate));
 	
 	// o += u
-	steering_direction_value = fix8_add(steering_direction_value, control_value);
+	steering_direction_value = fix8_sub(steering_direction_value, control_value);
 	
 	steering_set_direction(fix8_to_int(steering_direction_value));
 }

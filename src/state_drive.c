@@ -54,8 +54,8 @@ void state_drive_update_fixed()
 	
 	controller_motor_set_target_speed(TARGET_SPEED - irsens_get_speed_decrease());
 	controller_motor_update_pid();
-	//controller_steering_update_pid();
-	controller_steering_update_fixed();
+	controller_steering_update_pid();
+	//controller_steering_update_fixed();
 }
 
 void state_drive_update_fast()

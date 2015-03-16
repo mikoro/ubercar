@@ -26,7 +26,7 @@ void state_idle_init()
 	measurer_print_info();
 	
 	lcd_set_transparent_font(1);
-	lcd_draw_button(1, 30, 190, 0, 0, 31, 3, 31, 63, 31, 2, 2, " DRIVE ");
+	lcd_draw_button(1, 30, 250, 0, 0, 31, 3, 31, 63, 31, 2, 2, " DRIVE ");
 	lcd_set_transparent_font(0);
 }
 
