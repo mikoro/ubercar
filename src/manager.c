@@ -31,7 +31,7 @@ static state_info_t const state_procs[NUM_STATES] = {
 static state_t current_state = STATE_IDLE;
 static volatile uint8_t loop_elapsed_ms = 0;
 static volatile uint16_t timer_elapsed_ms = 0;
-static uint8_t led_toggle_counter = 0;
+static uint16_t led_toggle_counter = 0;
 static uint8_t button_down_count = 0;
 
 ISR(STATEMANREF_COMPA_vect)
