@@ -28,7 +28,7 @@
 ///*
 #define POWER_OFFSET 50
 #define STEERING_OFFSET 0
-#define TARGET_SPEED 10
+#define TARGET_SPEED 20
 
 #define IRSENS_LOCATION_MAP_FIXED { 127, 91, 54, 10, -10, -54, -91, -127 }
 #define IRSENS_LOCATION_MAP_PID { 127, 91, 54, 10, -10, -54, -91, -127 }
