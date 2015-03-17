@@ -45,34 +45,35 @@ void controller_motor_set_target_speed(uint8_t speed)
 
 void controller_steering_update_pid()
 {
+	int8_t steering_direction = fix8_to_int(steering_direction_value);
+	
 	// vy
 	fix8_t velocity_y = fix8_from_int((int8_t)tacho_get_speed());
 	
 	// sin(steering_angle)
 	// it is actually the sine of the real physical turning angle of the wheels
-	fix8_t direction_sine = steering_get_sine(fix8_to_int(steering_direction_value));
+	fix8_t direction_sine = steering_get_sine(steering_direction);
 	
 	// vx = vy * sin(steering_angle)
 	fix8_t velocity_x = fix8_mul(velocity_y, direction_sine);
 	
-	// x = x + vx * dt
-	steering_x = fix8_add(steering_x, fix8_mul(velocity_x, F8(TIME_STEP)));
+	// vx = vx * dt
+	//velocity_x = fix8_mul(velocity_x, F8(TIME_STEP));
+	velocity_x = fix8_mul(velocity_x, F8(4.0));
 	
+	if (steering_direction > 0)
+		velocity_x = fix8_mul(velocity_x, F8(-1));
+	
+	// x = x + vx
+	steering_x = fix8_add(steering_x, velocity_x);
+		
 	// if we have active sensor reading, use that instead
-	if (irsens_is_sensing())
-		steering_x = fix8_from_int(irsens_get_location_pid());
+	//if (irsens_is_sensing())
+		//steering_x = fix8_from_int(irsens_get_location_pid());
 	
 	// always try to steer back to center
 	// e = r - m
-	int16_t error = (int16_t)0 - steering_x;
-	
-	if (error < -128)
-		error = -128;
-	
-	if (error > 127)
-		error = 127;
-	
-	fix8_t clamped_error = fix8_from_int((int8_t)error);
+	fix8_t clamped_error = fix8_sub(F8(0), steering_x);
 	
 	// I = I + e * dt
 	steering_integral = fix8_add(steering_integral, fix8_mul(clamped_error, F8(TIME_STEP)));

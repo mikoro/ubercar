@@ -38,9 +38,9 @@
 #define MOTOR_KI 0.01
 #define MOTOR_KD 0.4
 
-#define STEERING_KP 0.3
+#define STEERING_KP 1.0
 #define STEERING_KI 0.0
-#define STEERING_KD 0.1
+#define STEERING_KD 0.0
 //*/
 
 ////////////////////////

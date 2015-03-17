@@ -34,6 +34,7 @@ void state_drive_init()
 	measurer_print_info();
 }
 
+// this drive loop with both controllers as PID will take 0.2 ms to execute
 void state_drive_update_fixed()
 {
 	if (button_was_released())
@@ -54,8 +55,8 @@ void state_drive_update_fixed()
 	
 	controller_motor_set_target_speed(TARGET_SPEED - irsens_get_speed_decrease());
 	controller_motor_update_pid();
-	controller_steering_update_pid();
-	//controller_steering_update_fixed();
+	//controller_steering_update_pid();
+	controller_steering_update_fixed();
 }
 
 void state_drive_update_fast()
