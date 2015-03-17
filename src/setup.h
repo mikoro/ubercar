@@ -9,8 +9,8 @@
 
 #define TACHO_UPDATE_FREQ 4 // Hz
 #define TACHO_AVG_AMOUNT 4 // taps
-#define TACHO_ENABLE_STOP_DETECTION 0
-#define TACHO_STOP_DETECTION_THRESHOLD 5 // speed
+#define TACHO_ENABLE_STOP_DETECTION 1
+#define TACHO_STOP_DETECTION_THRESHOLD 10 // speed
 
 #define IRSENS_ENABLE_STUCK_DETECTION 0
 #define IRSENS_STUCK_DETECTION_THRESHOLD 4 // seconds
@@ -27,12 +27,12 @@
 ////////////////////////
 ///*
 #define POWER_OFFSET 50
-#define STEERING_OFFSET 0
-#define TARGET_SPEED 20
+#define STEERING_OFFSET -200
+#define TARGET_SPEED 21
 
 #define IRSENS_LOCATION_MAP_FIXED { 127, 91, 54, 10, -10, -54, -91, -127 }
 #define IRSENS_LOCATION_MAP_PID { 127, 91, 54, 10, -10, -54, -91, -127 }
-#define IRSENS_SPEED_DECREASE_MAP { 6, 4, 2, 0, 0, 2, 4, 6 }
+#define IRSENS_SPEED_DECREASE_MAP { 5, 4, 2, 0, 0, 2, 4, 5 }
 
 #define MOTOR_KP 0.3
 #define MOTOR_KI 0.01
