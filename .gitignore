@@ -7,3 +7,7 @@ Debug/
 Release/
 *.atsuo
 sines.txt
+*.pdf
+*.log
+*.aux
+*.gz
