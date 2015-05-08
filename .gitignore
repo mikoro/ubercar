@@ -6,7 +6,6 @@
 Debug/
 Release/
 *.atsuo
-sines.txt
 *.log
 *.aux
 *.gz
